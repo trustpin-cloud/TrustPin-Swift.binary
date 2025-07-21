@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 0.2.1 Docs
+          TrustPinKit 0.3.0 Docs
         </a>
          (100% documented)
       </p>
@@ -296,6 +296,152 @@ and can reach this endpoint.</p>
                               <td>
                                 <div>
                                   <p>Base64-encoded public key for signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The pinning mode controlling behavior for unregistered domains (default: <code>.strict</code>)</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey16configurationURL4modeySS_S2S10Foundation0K0VAA0aB4ModeOtYaKFZ"></a>
+                    <a name="//apple_ref/swift/Method/setup(organizationId:projectId:publicKey:configurationURL:mode:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey16configurationURL4modeySS_S2S10Foundation0K0VAA0aB4ModeOtYaKFZ">setup(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>configurationURL:<wbr>mode:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes the TrustPin core library with a custom configuration URL.</p>
+
+<p>This method allows developers to override the default TrustPin configuration URL
+with a custom full URL for the signed payload (JWS). This is useful for custom
+deployment scenarios or when using alternative configuration endpoints.</p>
+<h2 id='example-usage' class='heading'>Example Usage</h2>
+<pre class="highlight swift"><code><span class="c1">// Custom configuration URL setup</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"LS0tLS1CRUdJTi..."</span><span class="p">,</span>
+    <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://custom.example.com/config/jws.b64"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span>
+<span class="p">)</span>
+</code></pre>
+<h2 id='security-considerations' class='heading'>Security Considerations</h2>
+
+<ul>
+<li>Ensure the custom URL serves a valid JWS (JSON Web Signature) payload</li>
+<li>The payload must be signed with the same public key provided</li>
+<li><p>Use HTTPS URLs to maintain security during configuration retrieval</p></li>
+</ul><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO20invalidProjectConfigyA2CmF">invalidProjectConfig</a></code> if credentials are invalid or empty</p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO24errorFetchingPinningInfoyA2CmF">errorFetchingPinningInfo</a></code> if network request fails</p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO29configurationValidationFailedyA2CmF">configurationValidationFailed</a></code> if signature verification fails</p>
+
+</div><div class="aside aside-important">
+    <p class="aside-title">Important</p>
+    <p>This method must be called before any certificate verification operations.</p>
+
+</div><div class="aside aside-important">
+    <p class="aside-title">Important</p>
+    <p>Only call this method once during your app&rsquo;s lifecycle.</p>
+
+</div><div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>Configuration is automatically cached for 10 minutes to improve performance.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                         <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                         <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                         <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span>
+                         <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>organizationId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your organization identifier from the TrustPin dashboard</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>projectId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your project identifier from the TrustPin dashboard<br></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>publicKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Base64-encoded public key for signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configurationURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Custom URL for the signed payload (JWS). CDN Managed project should not use this method.</p>
                                 </div>
                               </td>
                             </tr>

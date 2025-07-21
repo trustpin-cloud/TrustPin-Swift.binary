@@ -2,11 +2,11 @@ import SwiftUI
 import TrustPinKit
 
 struct ContentView: View {
-    @State private var organizationId = ""
-    @State private var projectId = ""
-    @State private var publicKey = ""
+    @State private var organizationId = "fb52418e-b5ae-4bff-b973-6da9ae07ba00"
+    @State private var projectId = "2fe3cc6a-87e4-46ee-ae43-cc87770a9181"
+    @State private var publicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHjSGlQ36ffIwyoAXFrbQRSWX7aIw88LdlcZGP/FF2GGLunNS9p2E7XyJQy1gIBcgnpmVKmwU0og/fEqhTJTcGA=="
 
-    @State private var testUrl = ""
+    @State private var testUrl = "https://api.trustpin.cloud/health"
     @State private var logOutput = "Welcome to TrustPin iOS Sample\nConfigure TrustPin and test connections...\n"
     @State private var statusMessage = "TrustPin not configured"
     @State private var isConfigured = false
