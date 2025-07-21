@@ -495,7 +495,7 @@ We welcome your feedback and questions!
 *Built with ❤️ by the TrustPin team*
 ## 📊 Code Coverage
 
-Current test coverage: **74.78%**
+Current test coverage: **91.64%**
 
 - [📱 Interactive Coverage Report](coverage/index.html) - Browse file-by-file coverage with visual indicators
 - [📄 Text Report](coverage.txt) - Plain text coverage summary  
