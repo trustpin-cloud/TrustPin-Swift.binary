@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
                     DESC
 
   spec.homepage     = "https://github.com/trustpin-cloud/TrustPin-Swift.binary"
-  spec.license      = { :type => "MIT", :file => "LICENSE" }
+  spec.license      = { :type => "Custom", :text => "TrustPin Binary License Agreement - See https://trustpin.cloud for full terms" }
   spec.author       = { "TrustPin" => "support@trustpin.cloud" }
 
   spec.ios.deployment_target = "13.0"
