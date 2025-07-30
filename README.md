@@ -44,13 +44,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `0.4.1` or later
+3. **Select version:** `0.4.2` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.4.1")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.4.2")
 ],
 targets: [
     .target(

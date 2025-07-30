@@ -1,12 +1,19 @@
 import SwiftUI
 import TrustPinKit
 
-struct ContentView: View {
-    @State private var organizationId = "fb52418e-b5ae-4bff-b973-6da9ae07ba00"
-    @State private var projectId = "2fe3cc6a-87e4-46ee-ae43-cc87770a9181"
-    @State private var publicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHjSGlQ36ffIwyoAXFrbQRSWX7aIw88LdlcZGP/FF2GGLunNS9p2E7XyJQy1gIBcgnpmVKmwU0og/fEqhTJTcGA=="
+// Replace with your own credentials at https://app.trustpin.cloud
+let testOrganizationId = "fb52418e-b5ae-4bff-b973-6da9ae07ba00"
+let testProjectId = "2fe3cc6a-87e4-46ee-ae43-cc87770a9181"
+let testPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHjSGlQ36ffIwyoAXFrbQRSWX7aIw88LdlcZGP/FF2GGLunNS9p2E7XyJQy1gIBcgnpmVKmwU0og/fEqhTJTcGA=="
+// A GET will be done to this URL in order to test the certificate pinning process
+let testURL = "https://api.trustpin.cloud/health"
 
-    @State private var testUrl = "https://api.trustpin.cloud/health"
+struct ContentView: View {
+    @State private var organizationId = testOrganizationId
+    @State private var projectId = testProjectId
+    @State private var publicKey = testPublicKey
+    @State private var url = testURL
+
     @State private var logOutput = "Welcome to TrustPin iOS Sample\nConfigure TrustPin and test connections...\n"
     @State private var statusMessage = "TrustPin not configured"
     @State private var isConfigured = false
@@ -23,9 +30,8 @@ struct ContentView: View {
     }()
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 16) {
+        ScrollView {
+            VStack(spacing: 16) {
                     // TrustPin Configuration Section
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
@@ -107,8 +113,8 @@ struct ContentView: View {
                                 }
                             }
                             
-                            Text(currentMode == .strict ? 
-                                "Blocks connections to unregistered domains" : 
+                            Text(currentMode == .strict ?
+                                "Blocks connections to unregistered domains" :
                                 "Allows connections to unregistered domains")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -129,10 +135,10 @@ struct ContentView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Test URL")
+                            Text("Test URL (GET)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            TextField("https://api.example.com", text: $testUrl)
+                            TextField("https://api.example.com", text: $url)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
@@ -206,16 +212,14 @@ struct ContentView: View {
                     .cornerRadius(12)
                 }
                 .padding()
-            }
-            .navigationTitle("TrustPin Sample")
-            .onAppear {
-                logMessage("📱 TrustPin iOS Sample started")
-            }
-            .alert("Change Pinning Mode", isPresented: $showModeAlert) {
-                Button("OK") { }
-            } message: {
-                Text("To change the pinning mode, modify the 'mode' parameter in the setupTrustPin() function code:\n\n• .strict for production (blocks unregistered domains)\n• .permissive for development (allows unregistered domains)")
-            }
+        }
+        .onAppear {
+            logMessage("📱 TrustPin iOS Sample started")
+        }
+        .alert("Change Pinning Mode", isPresented: $showModeAlert) {
+            Button("OK") { }
+        } message: {
+            Text("To change the pinning mode, modify the 'mode' parameter in the setupTrustPin() function code:\n\n• .strict for production (blocks unregistered domains)\n• .permissive for development (allows unregistered domains)")
         }
     }
     
@@ -265,7 +269,7 @@ struct ContentView: View {
             return
         }
         
-        guard !testUrl.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+        guard !url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             logMessage("⚠️ Test connection failed: No URL provided")
             return
         }
@@ -277,9 +281,9 @@ struct ContentView: View {
             }
             
             do {
-                logMessage("🌐 Testing connection to: \(testUrl)")
+                logMessage("🌐 Testing connection to: \(url)")
                 
-                let result = try await performNetworkRequest(url: testUrl.trimmingCharacters(in: .whitespacesAndNewlines))
+                let result = try await performNetworkRequest(url: url.trimmingCharacters(in: .whitespacesAndNewlines))
                 
                 await MainActor.run {
                     isTesting = false
