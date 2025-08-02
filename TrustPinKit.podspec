@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "TrustPinKit"
-  spec.version      = "0.5.2"
+  spec.version      = "0.7.0"
   spec.summary      = "TrustPin iOS SDK for certificate pinning and security"
   spec.description  = <<-DESC
                     TrustPin provides advanced certificate pinning and network security
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
   spec.watchos.deployment_target = "7.0"
   spec.tvos.deployment_target = "13.0"
 
-  spec.source       = { :http => "https://github.com/trustpin-cloud/TrustPin-Swift.binary/releases/download/0.5.2/TrustPinKit-0.5.2.xcframework.zip" }
+  spec.source       = { :http => "https://github.com/trustpin-cloud/TrustPin-Swift.binary/releases/download/0.7.0/TrustPinKit-0.7.0.xcframework.zip" }
   spec.vendored_frameworks = "TrustPinKit.xcframework"
 
   spec.framework = "Foundation"
