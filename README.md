@@ -16,6 +16,7 @@
 - ✅ **Intelligent Caching** - 10-minute configuration cache with stale fallback
 - ✅ **Comprehensive Logging** - Configurable log levels for debugging and monitoring
 - ✅ **Cross-Platform** - iOS, macOS, watchOS, tvOS, and Mac Catalyst support
+- ✅ **FIDO/WebAuthn Support** - Enhanced security with FIDO signature verification
 
 ---
 
@@ -44,13 +45,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `0.5.1` or later
+3. **Select version:** `0.5.2` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.5.1")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.5.2")
 ],
 targets: [
     .target(
@@ -213,19 +214,24 @@ try await TrustPin.setup(
 import Alamofire
 import TrustPinKit
 
-let trustPinDelegate = TrustPinURLSessionDelegate()
+// Create a custom SessionDelegate that extends TrustPinURLSessionDelegate
+class TrustPinAlamofireDelegate: TrustPinURLSessionDelegate, SessionDelegate {
+    // TrustPinURLSessionDelegate handles the certificate validation
+}
+
+let trustPinDelegate = TrustPinAlamofireDelegate()
 let session = Session(
     configuration: .default,
-    delegate: SessionDelegate(),
-    serverTrustManager: ServerTrustManager(
-        evaluators: [
-            "api.example.com": PinnedCertificatesTrustEvaluator()
-        ]
-    )
+    delegate: trustPinDelegate,
+    rootQueue: DispatchQueue(label: "com.trustpin.alamofire.queue"),
+    startRequestsImmediately: true
 )
 
 // Use the session for your requests
-let response = try await session.request("https://api.example.com/data").serializingData().value
+let response = try await session.request("https://api.example.com/data")
+    .validate()
+    .serializingData()
+    .value
 ```
 
 ### With Custom URLSession
@@ -404,6 +410,23 @@ func performNetworkRequest() async -> Data? {
         throw SecurityError.potentialMITMAttack
     }
 }
+```
+
+### FIDO/WebAuthn Configuration
+
+TrustPin supports enhanced security through FIDO/WebAuthn signatures for configuration validation:
+
+```swift
+// TrustPin automatically detects and validates FIDO-signed configurations
+// No additional setup required - the SDK handles WebAuthn verification internally
+
+// When your TrustPin configuration is signed with FIDO credentials:
+// 1. The SDK detects the FIDO flag in the JWS header
+// 2. Validates the WebAuthn signature using authenticator data
+// 3. Verifies the challenge matches the signing input
+// 4. Ensures cryptographic integrity of the configuration
+
+// This provides an additional layer of security for configuration distribution
 ```
 
 ---

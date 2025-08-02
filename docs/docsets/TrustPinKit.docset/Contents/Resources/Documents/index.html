@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          TrustPinKit 0.5.1 Docs
+          TrustPinKit 0.5.2 Docs
         </a>
          (100% documented)
       </p>
@@ -103,6 +103,7 @@
 <li>✅ <strong>Intelligent Caching</strong> - 10-minute configuration cache with stale fallback</li>
 <li>✅ <strong>Comprehensive Logging</strong> - Configurable log levels for debugging and monitoring</li>
 <li>✅ <strong>Cross-Platform</strong> - iOS, macOS, watchOS, tvOS, and Mac Catalyst support</li>
+<li>✅ <strong>FIDO/WebAuthn Support</strong> - Enhanced security with FIDO signature verification</li>
 </ul>
 
 <hr>
@@ -293,19 +294,24 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">Alamofire</span>
 <span class="kd">import</span> <span class="kt">TrustPinKit</span>
 
-<span class="k">let</span> <span class="nv">trustPinDelegate</span> <span class="o">=</span> <span class="kt">TrustPinURLSessionDelegate</span><span class="p">()</span>
+<span class="c1">// Create a custom SessionDelegate that extends TrustPinURLSessionDelegate</span>
+<span class="kd">class</span> <span class="kt">TrustPinAlamofireDelegate</span><span class="p">:</span> <span class="kt">TrustPinURLSessionDelegate</span><span class="p">,</span> <span class="kt">SessionDelegate</span> <span class="p">{</span>
+    <span class="c1">// TrustPinURLSessionDelegate handles the certificate validation</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">trustPinDelegate</span> <span class="o">=</span> <span class="kt">TrustPinAlamofireDelegate</span><span class="p">()</span>
 <span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">Session</span><span class="p">(</span>
     <span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
-    <span class="nv">delegate</span><span class="p">:</span> <span class="kt">SessionDelegate</span><span class="p">(),</span>
-    <span class="nv">serverTrustManager</span><span class="p">:</span> <span class="kt">ServerTrustManager</span><span class="p">(</span>
-        <span class="nv">evaluators</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s">"api.example.com"</span><span class="p">:</span> <span class="kt">PinnedCertificatesTrustEvaluator</span><span class="p">()</span>
-        <span class="p">]</span>
-    <span class="p">)</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="n">trustPinDelegate</span><span class="p">,</span>
+    <span class="nv">rootQueue</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"com.trustpin.alamofire.queue"</span><span class="p">),</span>
+    <span class="nv">startRequestsImmediately</span><span class="p">:</span> <span class="kc">true</span>
 <span class="p">)</span>
 
 <span class="c1">// Use the session for your requests</span>
-<span class="k">let</span> <span class="nv">response</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">.</span><span class="nf">serializingData</span><span class="p">()</span><span class="o">.</span><span class="n">value</span>
+<span class="k">let</span> <span class="nv">response</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="s">"https://api.example.com/data"</span><span class="p">)</span>
+    <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+    <span class="o">.</span><span class="nf">serializingData</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">value</span>
 </code></pre>
 <h3 id='with-custom-urlsession' class='heading'>With Custom URLSession</h3>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">Foundation</span>
@@ -484,6 +490,20 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
         <span class="k">throw</span> <span class="kt">SecurityError</span><span class="o">.</span><span class="n">potentialMITMAttack</span>
     <span class="p">}</span>
 <span class="p">}</span>
+</code></pre>
+<h3 id='fido-webauthn-configuration' class='heading'>FIDO/WebAuthn Configuration</h3>
+
+<p>TrustPin supports enhanced security through FIDO/WebAuthn signatures for configuration validation:</p>
+<pre class="highlight swift"><code><span class="c1">// TrustPin automatically detects and validates FIDO-signed configurations</span>
+<span class="c1">// No additional setup required - the SDK handles WebAuthn verification internally</span>
+
+<span class="c1">// When your TrustPin configuration is signed with FIDO credentials:</span>
+<span class="c1">// 1. The SDK detects the FIDO flag in the JWS header</span>
+<span class="c1">// 2. Validates the WebAuthn signature using authenticator data</span>
+<span class="c1">// 3. Verifies the challenge matches the signing input</span>
+<span class="c1">// 4. Ensures cryptographic integrity of the configuration</span>
+
+<span class="c1">// This provides an additional layer of security for configuration distribution</span>
 </code></pre>
 
 <hr>
