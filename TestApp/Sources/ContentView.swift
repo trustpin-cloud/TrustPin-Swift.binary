@@ -3,8 +3,10 @@ import TrustPinKit
 
 // Replace with your own credentials at https://app.trustpin.cloud
 let testOrganizationId = "fb52418e-b5ae-4bff-b973-6da9ae07ba00"
-let testProjectId = "2fe3cc6a-87e4-46ee-ae43-cc87770a9181"
-let testPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHjSGlQ36ffIwyoAXFrbQRSWX7aIw88LdlcZGP/FF2GGLunNS9p2E7XyJQy1gIBcgnpmVKmwU0og/fEqhTJTcGA=="
+let testProjectId = "ab688b6d-6e69-47c4-8cd0-cd0b7d3cfc11"
+let testPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzdIxFRW6Nl3lZjhpvK/t9JnnukPZGrNLQ2yJ/1HG56Tmp7bjxdLSibNFnOl2lYSsRASAekOWq7PHibQJfsoyPA=="
+
+
 // A GET will be done to this URL in order to test the certificate pinning process
 let testURL = "https://api.trustpin.cloud/health"
 
