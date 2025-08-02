@@ -3,9 +3,8 @@ import TrustPinKit
 
 // Replace with your own credentials at https://app.trustpin.cloud
 let testOrganizationId = "fb52418e-b5ae-4bff-b973-6da9ae07ba00"
-let testProjectId = "ab688b6d-6e69-47c4-8cd0-cd0b7d3cfc11"
-let testPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzdIxFRW6Nl3lZjhpvK/t9JnnukPZGrNLQ2yJ/1HG56Tmp7bjxdLSibNFnOl2lYSsRASAekOWq7PHibQJfsoyPA=="
-
+let testProjectId = "c14cf5c1-9a37-4204-b48e-0bf4c95b28f3"
+let testPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvYfRJiY51wo1p2fyDt2CqOW6jGxoyZCNJXAEMPw3ZqVcjAZkSBARxWBQlFJ+si8FCReuVplDHFWwXt7nfpFNLw=="
 
 // A GET will be done to this URL in order to test the certificate pinning process
 let testURL = "https://api.trustpin.cloud/health"
@@ -22,7 +21,7 @@ struct ContentView: View {
     @State private var isTesting = false
     @State private var currentMode: TrustPinMode = .strict
     @State private var showModeAlert = false
-    
+
     private let trustPinDelegate = TrustPinURLSessionDelegate()
 
     private let dateFormatter: DateFormatter = {
@@ -30,10 +29,11 @@ struct ContentView: View {
         formatter.dateFormat = "HH:mm:ss"
         return formatter
     }()
-    
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 16) {
                     // TrustPin Configuration Section
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
@@ -85,7 +85,7 @@ struct ContentView: View {
                             Text("Setup TrustPin")
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.blue)
+                                .background(Color.accentColor)
                                 .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
@@ -116,10 +116,10 @@ struct ContentView: View {
                             }
                             
                             Text(currentMode == .strict ?
-                                "Blocks connections to unregistered domains" :
-                                "Allows connections to unregistered domains")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                                 "Blocks connections to unregistered domains" :
+                                    "Allows connections to unregistered domains")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         }
                         .padding(.top, 8)
                     }
@@ -151,7 +151,7 @@ struct ContentView: View {
                                 Text("Test Connection")
                                     .frame(maxWidth: .infinity)
                                     .padding()
-                                    .background(isConfigured ? Color.green : Color.gray)
+                                    .background(isConfigured ? Color.accentColor : Color.gray)
                                     .foregroundColor(.white)
                                     .cornerRadius(8)
                             }
@@ -161,8 +161,8 @@ struct ContentView: View {
                                 Text("Clear Log")
                                     .frame(maxWidth: .infinity)
                                     .padding()
-                                    .background(Color.orange)
-                                    .foregroundColor(.white)
+                                    .background(.white)
+                                    .foregroundColor(Color.accentColor)
                                     .cornerRadius(8)
                             }
                         }
@@ -172,7 +172,7 @@ struct ContentView: View {
                                 .font(.caption)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(isConfigured ? Color.green : Color.red)
+                                .background(isConfigured ? Color.accentColor : Color.red)
                                 .foregroundColor(.white)
                                 .cornerRadius(6)
                             Spacer()
@@ -214,17 +214,21 @@ struct ContentView: View {
                     .cornerRadius(12)
                 }
                 .padding()
+            }
+            .onAppear {
+                logMessage("📱 TrustPin iOS Sample started")
+            }
+            .alert("Change Pinning Mode", isPresented: $showModeAlert) {
+                Button("OK") { }
+            } message: {
+                Text("To change the pinning mode, modify the 'mode' parameter in the setupTrustPin() function code:\n\n• .strict for production (blocks unregistered domains)\n• .permissive for development (allows unregistered domains)")
+            }
+            .navigationTitle("TrustPin Sample App")
+            .navigationBarTitleDisplayMode(.automatic)
         }
-        .onAppear {
-            logMessage("📱 TrustPin iOS Sample started")
-        }
-        .alert("Change Pinning Mode", isPresented: $showModeAlert) {
-            Button("OK") { }
-        } message: {
-            Text("To change the pinning mode, modify the 'mode' parameter in the setupTrustPin() function code:\n\n• .strict for production (blocks unregistered domains)\n• .permissive for development (allows unregistered domains)")
-        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
-    
+
     private func setupTrustPin() {
         guard !organizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               !projectId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
@@ -232,14 +236,14 @@ struct ContentView: View {
             logMessage("❌ Configuration failed: Missing required fields")
             return
         }
-        
+
         Task {
             do {
                 logMessage("⚙️ Configuring TrustPin...")
                 logMessage("   Organization ID: \(organizationId)")
                 logMessage("   Project ID: \(projectId)")
                 logMessage("   Public Key: \(String(publicKey.prefix(20)))...")
-                
+
                 await TrustPin.set(logLevel: .debug)
                 try await TrustPin.setup(
                     organizationId: organizationId.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -247,9 +251,9 @@ struct ContentView: View {
                     publicKey: publicKey.trimmingCharacters(in: .whitespacesAndNewlines),
                     mode: currentMode
                 )
-                
+
                 logMessage("🔒 Mode: \(currentMode == .strict ? "Strict" : "Permissive")")
-                
+
                 await MainActor.run {
                     isConfigured = true
                     statusMessage = "TrustPin configured"
@@ -264,29 +268,29 @@ struct ContentView: View {
             }
         }
     }
-    
-    private func testConnection() {
+
+    func testConnection() {
         guard isConfigured else {
             logMessage("⚠️ Test connection failed: TrustPin not configured")
             return
         }
-        
+
         guard !url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             logMessage("⚠️ Test connection failed: No URL provided")
             return
         }
-        
+
         Task {
             await MainActor.run {
                 isTesting = true
                 statusMessage = "Testing connection..."
             }
-            
+
             do {
                 logMessage("🌐 Testing connection to: \(url)")
-                
+
                 let result = try await performNetworkRequest(url: url.trimmingCharacters(in: .whitespacesAndNewlines))
-                
+
                 await MainActor.run {
                     isTesting = false
                     statusMessage = "TrustPin configured"
@@ -303,45 +307,45 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func performNetworkRequest(url: String) async throws -> String {
         guard let url = URL(string: url) else {
             throw URLError(.badURL)
         }
-        
+
         var request = URLRequest(url: url)
         request.setValue("TrustPin-iOS-Sample/1.0", forHTTPHeaderField: "User-Agent")
-        
+
         logMessage("📡 Making HTTP request...")
         logMessage("   Method: GET")
         logMessage("   URL: \(url)")
         logMessage("   User-Agent: TrustPin-iOS-Sample/1.0")
-        
+
         // Create URLSession with TrustPin delegate for SSL pinning validation
         let session = URLSession(configuration: .default, delegate: trustPinDelegate, delegateQueue: nil)
-        
+
         logMessage("🔒 Using TrustPin SSL certificate validation")
-        
+
         let (data, response) = try await session.data(for: request)
-        
+
         if let httpResponse = response as? HTTPURLResponse {
             logMessage("📨 Response received:")
             logMessage("   Status: \(httpResponse.statusCode)")
             logMessage("   Headers: \(httpResponse.allHeaderFields.count) headers")
         }
-        
+
         return String(data: data, encoding: .utf8) ?? ""
     }
-    
+
     private func logMessage(_ message: String) {
         let timestamp = dateFormatter.string(from: Date())
         let logEntry = "[\(timestamp)] \(message)\n"
-        
+
         DispatchQueue.main.async {
             logOutput += logEntry
         }
     }
-    
+
     private func clearLog() {
         logOutput = "Welcome to TrustPin iOS Sample\nConfigure TrustPin and test connections...\n"
         logMessage("🧹 Log cleared")

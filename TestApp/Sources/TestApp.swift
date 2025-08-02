@@ -5,7 +5,8 @@ struct TesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .ignoresSafeArea()
+                .accentColor(Color("AccentColor"))
+
         }
     }
 }
