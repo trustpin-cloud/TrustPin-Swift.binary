@@ -11,21 +11,35 @@ let project = Project(
             deploymentTargets: .iOS("15.0"),
             infoPlist: .extendingDefault(
                 with: [
-                    "UILaunchStoryboardName": "LaunchScreen",
+                    "UILaunchStoryboardName": "LaunchScreen.storyboard",
                     "UISupportedInterfaceOrientations": [
                         "UIInterfaceOrientationPortrait",
                         "UIInterfaceOrientationLandscapeLeft",
-                        "UIInterfaceOrientationLandscapeRight"
+                        "UIInterfaceOrientationLandscapeRight",
                     ],
                     "UISupportedInterfaceOrientations~ipad": [
                         "UIInterfaceOrientationPortrait",
                         "UIInterfaceOrientationPortraitUpsideDown",
                         "UIInterfaceOrientationLandscapeLeft",
-                        "UIInterfaceOrientationLandscapeRight"
-                    ]
+                        "UIInterfaceOrientationLandscapeRight",
+                    ],
+                    "NSAppTransportSecurity": [
+                        "NSExceptionDomains": [
+                            "cdn.trustpin.cloud": [
+                                "NSIncludesSubdomains": true,
+                                "NSTemporaryExceptionAllowsInsecureHTTPLoads": false,
+                                "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.2",
+                            ],
+                            "api.trustpin.cloud": [
+                                "NSIncludesSubdomains": true,
+                                "NSTemporaryExceptionAllowsInsecureHTTPLoads": false,
+                                "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.2",
+                            ],
+                        ]
+                    ],
                 ]
             ),
-            sources: ["Sources/**"],
+            sources: ["Sources/**/*.swift"],
             resources: [
                 "Sources/Assets.xcassets",
                 "Sources/LaunchScreen.storyboard"
