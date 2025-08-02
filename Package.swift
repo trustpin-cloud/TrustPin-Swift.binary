@@ -19,8 +19,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "TrustPinKit",
-            url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary/releases/download/0.4.2/TrustPinKit-0.4.2.xcframework.zip",
-            checksum: "34a676a69b1fe02d7e53d579f5222b52076d0a341b1a36b965cf5b40ebcf8329"
+            url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary/releases/download/0.5.0/TrustPinKit-0.5.0.xcframework.zip",
+            checksum: "d3489d0c42c262df086d6aa2da8e5328ffdf593e7453e38aee5d3ce438d44724"
         )
     ]
 )
