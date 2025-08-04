@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          TrustPinKit 0.7.0 Docs
+          TrustPinKit 0.12.0 Docs
         </a>
          (100% documented)
       </p>
@@ -116,7 +116,7 @@
 <li>✅ <strong>Intelligent Caching</strong> - 10-minute configuration cache with stale fallback</li>
 <li>✅ <strong>Comprehensive Logging</strong> - Configurable log levels for debugging and monitoring</li>
 <li>✅ <strong>Cross-Platform</strong> - iOS, macOS, watchOS, tvOS, and Mac Catalyst support</li>
-<li>✅ <strong>FIDO/WebAuthn Support</strong> - Enhanced security with FIDO signature verification</li>
+<li>✅ <strong>Enhanced Security</strong> - Advanced signature verification with multiple authentication methods</li>
 </ul>
 
 <hr>
@@ -286,20 +286,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
-<h3 id='advanced-configuration' class='heading'>Advanced Configuration</h3>
-<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">TrustPinKit</span>
-
-<span class="c1">// Enable debug logging before setup</span>
-<span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">debug</span><span class="p">)</span>
-
-<span class="c1">// Setup with permissive mode for staging environment</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
-    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"staging-org-id"</span><span class="p">,</span>
-    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"staging-project-id"</span><span class="p">,</span>
-    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"staging-public-key"</span><span class="p">,</span>
-    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">permissive</span>
-<span class="p">)</span>
-</code></pre>
 
 <hr>
 <h2 id='integration-examples' class='heading'>🔧 Integration Examples</h2>
@@ -426,14 +412,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <span class="c1">// .info     - Errors and informational messages</span>
 <span class="c1">// .debug    - All messages including debug information</span>
 </code></pre>
-<h3 id='example-debug-output' class='heading'>Example Debug Output</h3>
-<pre class="highlight plaintext"><code>[14:30:15] [DEBUG] Starting certificate verification for domain: api.example.com
-[14:30:15] [DEBUG] Sanitized domain: api.example.com
-[14:30:15] [INFO] Using cached configuration
-[14:30:15] [DEBUG] Found domain configuration with 2 pins
-[14:30:15] [DEBUG] Certificate hash matches sha256 pin for domain api.example.com
-[14:30:15] [INFO] Valid pin found for api.example.com
-</code></pre>
 
 <hr>
 <h2 id='best-practices' class='heading'>🏗 Best Practices</h2>
@@ -504,20 +482,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
-<h3 id='fido-webauthn-configuration' class='heading'>FIDO/WebAuthn Configuration</h3>
-
-<p>TrustPin supports enhanced security through FIDO/WebAuthn signatures for configuration validation:</p>
-<pre class="highlight swift"><code><span class="c1">// TrustPin automatically detects and validates FIDO-signed configurations</span>
-<span class="c1">// No additional setup required - the SDK handles WebAuthn verification internally</span>
-
-<span class="c1">// When your TrustPin configuration is signed with FIDO credentials:</span>
-<span class="c1">// 1. The SDK detects the FIDO flag in the JWS header</span>
-<span class="c1">// 2. Validates the WebAuthn signature using authenticator data</span>
-<span class="c1">// 3. Verifies the challenge matches the signing input</span>
-<span class="c1">// 4. Ensures cryptographic integrity of the configuration</span>
-
-<span class="c1">// This provides an additional layer of security for configuration distribution</span>
-</code></pre>
 
 <hr>
 <h2 id='api-reference' class='heading'>📚 API Reference</h2>
@@ -533,6 +497,9 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <h3 id='key-methods' class='heading'>Key Methods</h3>
 <pre class="highlight swift"><code><span class="c1">// Setup and configuration</span>
 <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">TrustPinMode</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
+
+<span class="c1">// Setup and configuration with custom CDN</span>
+<span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">TrustPinMode</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
 
 <span class="c1">// Manual verification  </span>
 <span class="kd">static</span> <span class="kd">func</span> <span class="nf">verify</span><span class="p">(</span><span class="nv">domain</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">certificate</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
@@ -617,7 +584,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2025 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2025-08-02)</p>
+      <p>&copy; 2025 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2025-08-04)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
