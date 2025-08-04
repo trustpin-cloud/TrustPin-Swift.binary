@@ -16,7 +16,7 @@
 - ✅ **Intelligent Caching** - 10-minute configuration cache with stale fallback
 - ✅ **Comprehensive Logging** - Configurable log levels for debugging and monitoring
 - ✅ **Cross-Platform** - iOS, macOS, watchOS, tvOS, and Mac Catalyst support
-- ✅ **FIDO/WebAuthn Support** - Enhanced security with FIDO signature verification
+- ✅ **Enhanced Security** - Advanced signature verification with multiple authentication methods
 
 ---
 
@@ -45,13 +45,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `0.7.0` or later
+3. **Select version:** `0.12.0` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.7.0")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.12.0")
 ],
 targets: [
     .target(
@@ -187,23 +187,6 @@ class AppDelegate: UIApplicationDelegate {
 }
 ```
 
-### Advanced Configuration
-
-```swift
-import TrustPinKit
-
-// Enable debug logging before setup
-await TrustPin.set(logLevel: .debug)
-
-// Setup with permissive mode for staging environment
-try await TrustPin.setup(
-    organizationId: "staging-org-id",
-    projectId: "staging-project-id",
-    publicKey: "staging-public-key",
-    mode: .permissive
-)
-```
-
 ---
 
 ## 🔧 Integration Examples
@@ -327,17 +310,6 @@ await TrustPin.set(logLevel: .debug)
 // .debug    - All messages including debug information
 ```
 
-### Example Debug Output
-
-```
-[14:30:15] [DEBUG] Starting certificate verification for domain: api.example.com
-[14:30:15] [DEBUG] Sanitized domain: api.example.com
-[14:30:15] [INFO] Using cached configuration
-[14:30:15] [DEBUG] Found domain configuration with 2 pins
-[14:30:15] [DEBUG] Certificate hash matches sha256 pin for domain api.example.com
-[14:30:15] [INFO] Valid pin found for api.example.com
-```
-
 ---
 
 ## 🏗 Best Practices
@@ -412,23 +384,6 @@ func performNetworkRequest() async -> Data? {
 }
 ```
 
-### FIDO/WebAuthn Configuration
-
-TrustPin supports enhanced security through FIDO/WebAuthn signatures for configuration validation:
-
-```swift
-// TrustPin automatically detects and validates FIDO-signed configurations
-// No additional setup required - the SDK handles WebAuthn verification internally
-
-// When your TrustPin configuration is signed with FIDO credentials:
-// 1. The SDK detects the FIDO flag in the JWS header
-// 2. Validates the WebAuthn signature using authenticator data
-// 3. Verifies the challenge matches the signing input
-// 4. Ensures cryptographic integrity of the configuration
-
-// This provides an additional layer of security for configuration distribution
-```
-
 ---
 
 ## 📚 API Reference
@@ -446,6 +401,9 @@ TrustPin supports enhanced security through FIDO/WebAuthn signatures for configu
 ```swift
 // Setup and configuration
 static func setup(organizationId: String, projectId: String, publicKey: String, mode: TrustPinMode) async throws
+
+// Setup and configuration with custom CDN
+static func setup(organizationId: String, projectId: String, publicKey: String, configurationURL: URL, mode: TrustPinMode) async throws
 
 // Manual verification  
 static func verify(domain: String, certificate: String) async throws
