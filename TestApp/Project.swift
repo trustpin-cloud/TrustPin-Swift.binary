@@ -24,6 +24,7 @@ let project = Project(
                         "UIInterfaceOrientationLandscapeRight"
                     ],
                     "NSAppTransportSecurity": [
+                        "NSAllowsArbitraryLoads": true,
                         "NSExceptionDomains": [
                             "cdn.trustpin.cloud": [
                                 "NSIncludesSubdomains": true,
@@ -45,7 +46,6 @@ let project = Project(
                 "Sources/LaunchScreen.storyboard",
                 "Sources/trustpin.png"
             ],
-            entitlements: "Sources/TestApp.entitlements",
             dependencies: [
                 .external(name: "TrustPinKit")
             ]
