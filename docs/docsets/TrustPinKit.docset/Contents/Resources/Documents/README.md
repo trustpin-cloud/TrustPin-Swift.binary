@@ -29,6 +29,7 @@
 | watchOS | 7.0+ |
 | tvOS | 13.0+ |
 | Mac Catalyst | 13.0+ |
+| visionOS | 2.0+ |
 
 **Required:** Swift 5.5+ for async/await support
 
@@ -62,6 +63,21 @@ targets: [
     )
 ]
 ```
+
+### CocoaPods
+
+Add TrustPin to your `Podfile`:
+
+```ruby
+pod 'TrustPinKit'
+```
+
+Then run:
+```bash
+pod install
+```
+
+The podspec is hosted at [TrustPin-Swift.binary](https://github.com/trustpin-cloud/TrustPin-Swift.binary) and published to the CocoaPods trunk.
 
 ---
 
