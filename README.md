@@ -29,6 +29,7 @@
 | watchOS | 7.0+ |
 | tvOS | 13.0+ |
 | Mac Catalyst | 13.0+ |
+| visionOS | 2.0+ |
 
 **Required:** Swift 5.5+ for async/await support
 
@@ -45,13 +46,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `0.17.0` or later
+3. **Select version:** `0.18.0` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.17.0")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "0.18.0")
 ],
 targets: [
     .target(
@@ -62,6 +63,21 @@ targets: [
     )
 ]
 ```
+
+### CocoaPods
+
+Add TrustPin to your `Podfile`:
+
+```ruby
+pod 'TrustPinKit'
+```
+
+Then run:
+```bash
+pod install
+```
+
+The podspec is hosted at [TrustPin-Swift.binary](https://github.com/trustpin-cloud/TrustPin-Swift.binary) and published to the CocoaPods trunk.
 
 ---
 
