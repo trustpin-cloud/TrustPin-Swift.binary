@@ -11,7 +11,7 @@ let project = Project(
             deploymentTargets: .iOS("15.0"),
             infoPlist: .extendingDefault(
                 with: [
-                    "UILaunchStoryboardName": "LaunchScreen",
+                    "UILaunchStoryboardName": "LaunchScreen.storyboard",
                     "UISupportedInterfaceOrientations": [
                         "UIInterfaceOrientationPortrait",
                         "UIInterfaceOrientationLandscapeLeft",
@@ -25,14 +25,18 @@ let project = Project(
                     ],
                     "NSAppTransportSecurity": [
                         "NSExceptionDomains": [
-                            "trustpin.cloud": [
-                                "NSExceptionAllowsInsecureHTTPLoads": false,
-                                "NSExceptionMinimumTLSVersion": "TLSv1.2",
-                                "NSExceptionRequiresForwardSecrecy": true,
-                                "NSIncludesSubdomains": true
+                            "cdn.trustpin.cloud": [
+                                "NSIncludesSubdomains": true,
+                                "NSTemporaryExceptionAllowsInsecureHTTPLoads": false,
+                                "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.2"
+                            ],
+                            "api.trustpin.cloud": [
+                                "NSIncludesSubdomains": true,
+                                "NSTemporaryExceptionAllowsInsecureHTTPLoads": false,
+                                "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.2"
                             ]
                         ]
-                    ]                    
+                    ]                 
                 ]
             ),
             sources: ["Sources/**"],
