@@ -322,21 +322,7 @@ struct ContentView: View {
         logMessage("   User-Agent: TrustPin-iOS-Sample/1.0")
 
         // Create URLSession with TrustPin delegate for SSL pinning validation
-        let config = URLSessionConfiguration.default
-
-        // Disable HTTP/3 and configure timeouts
-        if #available(iOS 14.5, *) {
-            request.assumesHTTP3Capable = false
-        }
-
-        // Configure timeouts
-        config.timeoutIntervalForRequest = 30.0
-        config.timeoutIntervalForResource = 60.0
-
-        // Force HTTP/1.1 by disabling HTTP/2 and HTTP/3
-        config.httpMaximumConnectionsPerHost = 1
-        config.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-
+        let config = URLSessionConfiguration.ephemeral
         let session = URLSession(configuration: config, delegate: trustPinDelegate, delegateQueue: nil)
 
         logMessage("🔒 Using TrustPin SSL certificate validation")
