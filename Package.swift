@@ -1,4 +1,4 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.1
 import PackageDescription
 
 let package = Package(
@@ -20,8 +20,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "TrustPinKit",
-            url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary/releases/download/0.21.0/TrustPinKit-0.21.0.xcframework.zip",
-            checksum: "624331d8832bd21fca1ded495a006ebb5a59db211a541c0ac51527ef4c8093f3"
+            url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary/releases/download/0.22.0/TrustPinKit-0.22.0.xcframework.zip",
+            checksum: "3d29ae66fa70caa5150ce956ca8bd7f947f347018cfe7242c49a9b5d2dbbf330"
         )
     ]
 )

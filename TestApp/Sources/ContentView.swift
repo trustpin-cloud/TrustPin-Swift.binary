@@ -42,7 +42,7 @@ struct ContentView: View {
                                 .fontWeight(.semibold)
                             Spacer()
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Organization ID")
                                 .font(.caption)
@@ -52,7 +52,7 @@ struct ContentView: View {
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Project ID")
                                 .font(.caption)
@@ -62,7 +62,7 @@ struct ContentView: View {
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Public Key")
                                 .font(.caption)
@@ -80,7 +80,7 @@ struct ContentView: View {
                                     .autocorrectionDisabled()
                             }
                         }
-                        
+
                         Button(action: setupTrustPin) {
                             Text("Setup TrustPin")
                                 .frame(maxWidth: .infinity)
@@ -89,20 +89,20 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
-                        
+
                         // TrustPin Mode Display
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Pinning Mode")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            
+
                             HStack {
                                 Text(currentMode == .strict ? "Strict Mode" : "Permissive Mode")
                                     .font(.body)
                                     .fontWeight(.medium)
-                                
+
                                 Spacer()
-                                
+
                                 Toggle("", isOn: Binding(
                                     get: { currentMode == .strict },
                                     set: { _ in showModeAlert = true }
@@ -114,7 +114,7 @@ struct ContentView: View {
                                     showModeAlert = true
                                 }
                             }
-                            
+
                             Text(currentMode == .strict ?
                                  "Blocks connections to unregistered domains" :
                                     "Allows connections to unregistered domains")
@@ -126,7 +126,7 @@ struct ContentView: View {
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-                    
+
                     // Connection Testing Section
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
@@ -135,7 +135,7 @@ struct ContentView: View {
                                 .fontWeight(.semibold)
                             Spacer()
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Test URL (GET)")
                                 .font(.caption)
@@ -145,7 +145,7 @@ struct ContentView: View {
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
                         }
-                        
+
                         HStack(spacing: 12) {
                             Button(action: testConnection) {
                                 Text("Test Connection")
@@ -156,7 +156,7 @@ struct ContentView: View {
                                     .cornerRadius(8)
                             }
                             .disabled(!isConfigured || isTesting)
-                            
+
                             Button(action: clearLog) {
                                 Text("Clear Log")
                                     .frame(maxWidth: .infinity)
@@ -166,7 +166,7 @@ struct ContentView: View {
                                     .cornerRadius(8)
                             }
                         }
-                        
+
                         HStack {
                             Text("Status: \(statusMessage)")
                                 .font(.caption)
@@ -181,7 +181,7 @@ struct ContentView: View {
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-                    
+
                     // Log Output Section
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
@@ -190,7 +190,7 @@ struct ContentView: View {
                                 .fontWeight(.semibold)
                             Spacer()
                         }
-                        
+
                         ScrollView {
                             ScrollViewReader { proxy in
                                 Text(logOutput)
@@ -322,7 +322,22 @@ struct ContentView: View {
         logMessage("   User-Agent: TrustPin-iOS-Sample/1.0")
 
         // Create URLSession with TrustPin delegate for SSL pinning validation
-        let session = URLSession(configuration: .default, delegate: trustPinDelegate, delegateQueue: nil)
+        let config = URLSessionConfiguration.default
+
+        // Disable HTTP/3 and configure timeouts
+        if #available(iOS 14.5, *) {
+            config.assumesHTTP3Capable = false
+        }
+
+        // Configure timeouts
+        config.timeoutIntervalForRequest = 30.0
+        config.timeoutIntervalForResource = 60.0
+
+        // Force HTTP/1.1 by disabling HTTP/2 and HTTP/3
+        config.httpMaximumConnectionsPerHost = 1
+        config.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+
+        let session = URLSession(configuration: config, delegate: trustPinDelegate, delegateQueue: nil)
 
         logMessage("🔒 Using TrustPin SSL certificate validation")
 
