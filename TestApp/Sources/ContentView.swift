@@ -326,7 +326,7 @@ struct ContentView: View {
 
         // Disable HTTP/3 and configure timeouts
         if #available(iOS 14.5, *) {
-            config.assumesHTTP3Capable = false
+            request.assumesHTTP3Capable = false
         }
 
         // Configure timeouts
