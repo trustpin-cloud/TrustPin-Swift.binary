@@ -22,7 +22,17 @@ let project = Project(
                         "UIInterfaceOrientationPortraitUpsideDown",
                         "UIInterfaceOrientationLandscapeLeft",
                         "UIInterfaceOrientationLandscapeRight"
-                    ]
+                    ],
+                    "NSAppTransportSecurity": [
+                        "NSExceptionDomains": [
+                            "trustpin.cloud": [
+                                "NSExceptionAllowsInsecureHTTPLoads": false,
+                                "NSExceptionMinimumTLSVersion": "TLSv1.2",
+                                "NSExceptionRequiresForwardSecrecy": true,
+                                "NSIncludesSubdomains": true
+                            ]
+                        ]
+                    ]                    
                 ]
             ),
             sources: ["Sources/**"],
