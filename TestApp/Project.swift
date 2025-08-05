@@ -28,7 +28,8 @@ let project = Project(
             sources: ["Sources/**"],
             resources: [
                 "Sources/Assets.xcassets",
-                "Sources/LaunchScreen.storyboard"
+                "Sources/LaunchScreen.storyboard",
+                "Sources/trustpin.png"
             ],
             entitlements: "Sources/TestApp.entitlements",
             dependencies: [
