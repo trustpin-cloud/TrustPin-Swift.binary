@@ -21,9 +21,9 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 1.0.0 Docs
+          TrustPinKit 1.1.0 Docs
         </a>
-         (92% documented)
+         (95% documented)
       </p>
     
       <div class="header-col--secondary">
@@ -68,6 +68,9 @@
                 <a class="nav-group-task-link" href="../Classes/TrustPinKitResources.html">TrustPinKitResources</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a>
               </li>
             </ul>
@@ -83,6 +86,14 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/TrustPinMode.html">TrustPinMode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URLSession.html">URLSession</a>
               </li>
             </ul>
           </li>
@@ -170,9 +181,9 @@ Internal operations are performed on appropriate background queues.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4modeySS_S2SAA0aB4ModeOtYaKFZ"></a>
-                    <a name="//apple_ref/swift/Method/setup(organizationId:projectId:publicKey:mode:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4modeySS_S2SAA0aB4ModeOtYaKFZ">setup(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>mode:<wbr>)</a>
+                    <a name="/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4mode23autoRegisterURLProtocolySS_S2SAA0aB4ModeOSbtYaKFZ"></a>
+                    <a name="//apple_ref/swift/Method/setup(organizationId:projectId:publicKey:mode:autoRegisterURLProtocol:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4mode23autoRegisterURLProtocolySS_S2SAA0aB4ModeOSbtYaKFZ">setup(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>mode:<wbr>autoRegisterURLProtocol:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -219,6 +230,17 @@ for 10 minutes to optimize performance and reduce network requests.</p>
 <li><strong>Development</strong>: Use <code><a href="../Enums/TrustPinMode.html#/s:11TrustPinKit0aB4ModeO10permissiveyA2CmF">permissive</a></code> mode to allow connections to unregistered domains</li>
 <li><strong>Credentials</strong>: Keep your public key secure and never commit it to version control in plain text</li>
 </ul>
+<h2 id='automatic-certificate-pinning' class='heading'>Automatic Certificate Pinning</h2>
+
+<p>When this method completes successfully, TrustPin automatically registers a URLProtocol
+that intercepts all HTTPS requests system-wide, applying certificate pinning transparently.
+This means:</p>
+
+<ul>
+<li>All <code>URLSession</code> instances (including <code>URLSession.shared</code>) will use certificate pinning</li>
+<li>No additional configuration is needed for most networking code</li>
+<li>Third-party libraries using URLSession will also be protected</li>
+</ul>
 <h2 id='network-requirements' class='heading'>Network Requirements</h2>
 
 <p>This method requires network access to fetch the pinning configuration from
@@ -258,7 +280,8 @@ and can reach this endpoint.</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                         <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
+                         <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
+                         <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -314,6 +337,18 @@ and can reach this endpoint.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoRegisterURLProtocol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether to automatically register URLProtocol for system-wide pinning (default: <code>true</code>)</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -323,9 +358,9 @@ and can reach this endpoint.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey16configurationURL4modeySS_S2S10Foundation0K0VAA0aB4ModeOtYaKFZ"></a>
-                    <a name="//apple_ref/swift/Method/setup(organizationId:projectId:publicKey:configurationURL:mode:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey16configurationURL4modeySS_S2S10Foundation0K0VAA0aB4ModeOtYaKFZ">setup(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>configurationURL:<wbr>mode:<wbr>)</a>
+                    <a name="/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey16configurationURL4mode23autoRegisterURLProtocolySS_S2S10Foundation0K0VAA0aB4ModeOSbtYaKFZ"></a>
+                    <a name="//apple_ref/swift/Method/setup(organizationId:projectId:publicKey:configurationURL:mode:autoRegisterURLProtocol:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey16configurationURL4mode23autoRegisterURLProtocolySS_S2S10Foundation0K0VAA0aB4ModeOSbtYaKFZ">setup(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>configurationURL:<wbr>mode:<wbr>autoRegisterURLProtocol:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -392,7 +427,8 @@ deployment scenarios or when using alternative configuration endpoints.</p>
                          <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span>
-                         <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
+                         <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
+                         <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -460,8 +496,120 @@ deployment scenarios or when using alternative configuration endpoints.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoRegisterURLProtocol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether to automatically register URLProtocol for system-wide pinning (default: <code>true</code>)</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB0C21unregisterURLProtocolyyFZ"></a>
+                    <a name="//apple_ref/swift/Method/unregisterURLProtocol()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C21unregisterURLProtocolyyFZ">unregisterURLProtocol()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Unregisters the TrustPin URLProtocol from the URL loading system.</p>
+
+<p>Use this method if you need to disable automatic certificate pinning for all URLSession requests.
+This is typically only needed in advanced scenarios where you want to control URLProtocol registration manually.</p>
+<h2 id='example-usage' class='heading'>Example Usage</h2>
+<pre class="highlight swift"><code><span class="c1">// Disable automatic pinning for all URLSessions</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">unregisterURLProtocol</span><span class="p">()</span>
+
+<span class="c1">// You can still use TrustPinURLSessionDelegate for specific sessions</span>
+<span class="k">let</span> <span class="nv">delegate</span> <span class="o">=</span> <span class="kt">TrustPinURLSessionDelegate</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="n">delegate</span><span class="p">,</span> <span class="nv">delegateQueue</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    This only affects future URL requests. Existing URLSession instances may still use the protocol until recreated.
+
+</div><div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    You can re-register the protocol later by calling <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C19registerURLProtocolyyFZ">TrustPin.registerURLProtocol()</a></code>.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="n">macOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="n">tvOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="n">watchOS</span> <span class="mf">7.0</span><span class="p">,</span> <span class="n">visionOS</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">unregisterURLProtocol</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB0C19registerURLProtocolyyFZ"></a>
+                    <a name="//apple_ref/swift/Method/registerURLProtocol()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C19registerURLProtocolyyFZ">registerURLProtocol()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Manually registers the TrustPin URLProtocol with the URL loading system.</p>
+
+<p>This method allows you to re-register the URLProtocol after unregistering it,
+or register it manually if you initially set <code>autoRegisterURLProtocol: false</code> during setup.</p>
+<h2 id='example-usage' class='heading'>Example Usage</h2>
+<pre class="highlight swift"><code><span class="c1">// Setup without auto-registration</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"org-123"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"project-456"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"LS0tLS1CRUdJTk..."</span><span class="p">,</span>
+    <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">)</span>
+
+<span class="c1">// Later, manually register when needed</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">registerURLProtocol</span><span class="p">()</span>
+</code></pre>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The URLProtocol will be registered globally and affect all URLSession instances.
+
+</div><div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    If already registered, this method has no effect.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="n">macOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="n">tvOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="n">watchOS</span> <span class="mf">7.0</span><span class="p">,</span> <span class="n">visionOS</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">registerURLProtocol</span><span class="p">()</span></code></pre>
+
+                        </div>
                       </div>
                     </section>
                   </div>
@@ -539,7 +687,7 @@ Both single and multiple certificate chains are supported.</p>
 
 </div><div class="aside aside-important">
     <p class="aside-title">Important</p>
-    <p>Call <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4modeySS_S2SAA0aB4ModeOtYaKFZ">setup(organizationId:projectId:publicKey:mode:)</a></code> before using this method.</p>
+    <p>Call <code>setup(organizationId:projectId:publicKey:mode:)</code> before using this method.</p>
 
 </div><div class="aside aside-note">
     <p class="aside-title">Note</p>
@@ -640,7 +788,7 @@ security events. Different log levels provide varying amounts of detail.</p>
 
 </div><div class="aside aside-important">
     <p class="aside-title">Important</p>
-    <p>Set the log level before calling <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4modeySS_S2SAA0aB4ModeOtYaKFZ">setup(organizationId:projectId:publicKey:mode:)</a></code> for complete logging coverage.</p>
+    <p>Set the log level before calling <code>setup(organizationId:projectId:publicKey:mode:)</code> for complete logging coverage.</p>
 
 </div>
 
@@ -683,7 +831,7 @@ security events. Different log levels provide varying amounts of detail.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2025 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2025-08-05)</p>
+      <p>&copy; 2025 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2025-08-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
