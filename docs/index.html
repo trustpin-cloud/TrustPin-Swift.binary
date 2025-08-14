@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          TrustPinKit 1.1.0 Docs
+          TrustPinKit 1.1.1 Docs
         </a>
          (95% documented)
       </p>
@@ -126,7 +126,7 @@
 <li>✅ <strong>Flexible Pinning Modes</strong> - Strict validation or permissive mode for development</li>
 <li>✅ <strong>Multiple Hash Algorithms</strong> - SHA-256 and SHA-512 certificate validation</li>
 <li>✅ <strong>Signed Configuration</strong> - Cryptographically signed pinning configurations</li>
-<li>✅ <strong>URLSession Integration</strong> - Drop-in <code>URLSessionDelegate</code> for automatic validation</li>
+<li>✅ <strong>Multiple Integration Options</strong> - System-wide URLProtocol, URLSessionDelegate, or static helper methods</li>
 <li>✅ <strong>Intelligent Caching</strong> - 10-minute configuration cache with stale fallback</li>
 <li>✅ <strong>Comprehensive Logging</strong> - Configurable log levels for debugging and monitoring</li>
 <li>✅ <strong>Cross-Platform</strong> - iOS, macOS, watchOS, tvOS, and Mac Catalyst support</li>
@@ -140,35 +140,43 @@
 <tr>
 <th>Platform</th>
 <th>Minimum Version</th>
+<th>URLProtocol System-Wide Pinning</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>iOS</td>
 <td>13.0+</td>
+<td>✅ Supported</td>
 </tr>
 <tr>
 <td>macOS</td>
 <td>13.0+</td>
+<td>✅ Supported</td>
 </tr>
 <tr>
 <td>watchOS</td>
 <td>7.0+</td>
+<td>✅ Supported</td>
 </tr>
 <tr>
 <td>tvOS</td>
 <td>13.0+</td>
+<td>✅ Supported</td>
 </tr>
 <tr>
 <td>Mac Catalyst</td>
 <td>13.0+</td>
+<td>✅ Supported</td>
 </tr>
 <tr>
 <td>visionOS</td>
 <td>2.0+</td>
+<td>✅ Supported</td>
 </tr>
 </tbody></table>
 
-<p><strong>Required:</strong> Swift 5.5+ for async/await support</p>
+<p><strong>Required:</strong> Swift 5.5+ for async/await support
+<strong>Note:</strong> URLProtocol-based features require iOS 13.0+ (available on all supported platforms)</p>
 
 <hr>
 <h2 id='installation' class='heading'>📦 Installation</h2>
@@ -279,6 +287,64 @@ https://github.com/trustpin-cloud/TrustPin-Swift.binary
 </blockquote>
 
 <hr>
+<h2 id='integration-approaches' class='heading'>🛠 Integration Approaches</h2>
+
+<p>TrustPin offers three different ways to integrate certificate pinning into your application:</p>
+
+<table><thead>
+<tr>
+<th>Approach</th>
+<th>Best For</th>
+<th>Setup Complexity</th>
+<th>Coverage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>System-Wide URLProtocol</strong> (Recommended)</td>
+<td>Most applications, zero-config after setup</td>
+<td>🟢 Minimal</td>
+<td>All URLSession requests</td>
+</tr>
+<tr>
+<td><strong>URLSessionDelegate</strong></td>
+<td>Custom URLSession setups, granular control</td>
+<td>🟡 Medium</td>
+<td>Specific URLSession instances</td>
+</tr>
+<tr>
+<td><strong>Helper Methods</strong></td>
+<td>Explicit control, static method preference</td>
+<td>🟠 Per-request</td>
+<td>Individual requests</td>
+</tr>
+</tbody></table>
+<h3 id='when-to-choose-each-approach' class='heading'>When to Choose Each Approach</h3>
+<h4 id='system-wide-urlprotocol-default-amp-recommended' class='heading'>System-Wide URLProtocol (Default &amp; Recommended)</h4>
+
+<ul>
+<li>✅ <strong>Broad protection</strong>: Automatically secures all URLSession requests</li>
+<li>✅ <strong>Zero configuration</strong>: Works with existing networking code</li>
+<li>✅ <strong>Third-party compatibility</strong>: Protects libraries using URLSession<br></li>
+<li>✅ <strong>Maintainability</strong>: Single setup call for entire app</li>
+</ul>
+<h4 id='urlsessiondelegate' class='heading'>URLSessionDelegate</h4>
+
+<ul>
+<li>✅ <strong>Granular control</strong>: Only specific URLSession instances use pinning</li>
+<li>✅ <strong>Legacy compatibility</strong>: Works with older networking patterns</li>
+<li>✅ <strong>Custom delegation</strong>: Integrate with existing URLSessionDelegate code</li>
+<li>✅ <strong>Selective pinning</strong>: Mix pinned and non-pinned sessions in same app</li>
+</ul>
+<h4 id='helper-methods' class='heading'>Helper Methods</h4>
+
+<ul>
+<li>✅ <strong>Explicit requests</strong>: Clear intent for which requests use pinning<br></li>
+<li>✅ <strong>Static methods</strong>: Functional programming style</li>
+<li>✅ <strong>Migration friendly</strong>: Easy drop-in replacements for existing URLSession calls</li>
+<li>✅ <strong>Testing isolation</strong>: Test pinned vs non-pinned requests separately</li>
+</ul>
+
+<hr>
 <h2 id='usage-examples' class='heading'>🛠 Usage Examples</h2>
 <h3 id='system-wide-certificate-pinning-recommended' class='heading'>System-Wide Certificate Pinning (Recommended)</h3>
 
@@ -348,9 +414,67 @@ https://github.com/trustpin-cloud/TrustPin-Swift.binary
 <span class="c1">// Unregister when no longer needed</span>
 <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">unregisterURLProtocol</span><span class="p">()</span>
 </code></pre>
+<h3 id='urlprotocol-helper-methods-alternative-api' class='heading'>URLProtocol Helper Methods (Alternative API)</h3>
+
+<p>For scenarios where you prefer explicit control or want to use static helper methods:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">TrustPinKit</span>
+
+<span class="kd">class</span> <span class="kt">NetworkManager</span> <span class="p">{</span>
+
+    <span class="c1">// Async/await examples</span>
+    <span class="kd">func</span> <span class="nf">fetchDataWithHelpers</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Data</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="p">(</span><span class="nv">data</span><span class="p">,</span> <span class="nv">_</span><span class="p">)</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">downloadFileWithHelpers</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">URL</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/file.pdf"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+        <span class="k">let</span> <span class="p">(</span><span class="nv">fileURL</span><span class="p">,</span> <span class="nv">_</span><span class="p">)</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fileURL</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Completion handler examples</span>
+    <span class="kd">func</span> <span class="nf">fetchDataWithCompletionHandler</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="nv">task</span> <span class="o">=</span> <span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span> <span class="n">data</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"Error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"Received </span><span class="se">\(</span><span class="n">data</span><span class="o">.</span><span class="n">count</span><span class="se">)</span><span class="s"> bytes"</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">task</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Custom session with pinning</span>
+    <span class="kd">func</span> <span class="nf">useCustomTrustPinSession</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Data</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="nf">trustPinSession</span><span class="p">(</span>
+            <span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="n">ephemeral</span>
+        <span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="p">(</span><span class="nv">data</span><span class="p">,</span> <span class="nv">_</span><span class="p">)</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>💡 <strong>When to use helper methods</strong>:</p>
+
+<ul>
+<li>When you need explicit control over individual requests</li>
+<li>For codebases that prefer static method calls</li>
+<li>When migrating from other networking libraries</li>
+<li>For testing scenarios where you want to isolate pinned requests</li>
+</ul>
+</blockquote>
 <h3 id='automatic-urlsession-integration' class='heading'>Automatic URLSession Integration</h3>
 
-<p>The simplest way to add certificate pinning to your network requests:</p>
+<p>The traditional delegate-based approach (still fully supported):</p>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">TrustPinKit</span>
 
 <span class="kd">class</span> <span class="kt">NetworkManager</span> <span class="p">{</span>
@@ -620,23 +744,59 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 
 <ul>
 <li><strong><code><a href="Classes/TrustPin.html">TrustPin</a></code></strong> - Main SDK interface for setup and verification</li>
-<li><strong><code><a href="Enums/TrustPinMode.html">TrustPinMode</a></code></strong> - Enum defining pinning behavior modes</li>
+<li><strong><code><a href="Enums/TrustPinMode.html">TrustPinMode</a></code></strong> - Enum defining pinning behavior modes (<code>.strict</code>, <code>.permissive</code>)</li>
 <li><strong><code><a href="Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a></code></strong> - URLSession delegate for automatic validation</li>
+<li><strong><code><a href="Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a></code></strong> - URLProtocol implementation for system-wide pinning (iOS 13.0+)</li>
 <li><strong><code><a href="Enums/TrustPinErrors.html">TrustPinErrors</a></code></strong> - Error types for detailed error handling</li>
-<li><strong><code><a href="Enums/TrustPinLogLevel.html">TrustPinLogLevel</a></code></strong> - Logging configuration options</li>
+<li><strong><code><a href="Enums/TrustPinLogLevel.html">TrustPinLogLevel</a></code></strong> - Logging configuration options (<code>.none</code>, <code>.error</code>, <code>.info</code>, <code>.debug</code>)</li>
 </ul>
 <h3 id='key-methods' class='heading'>Key Methods</h3>
-<pre class="highlight swift"><code><span class="c1">// Setup and configuration</span>
-<span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">TrustPinMode</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
+<h4 id='core-trustpin-api' class='heading'>Core TrustPin API</h4>
+<pre class="highlight swift"><code><span class="c1">// Setup and configuration (standard)</span>
+<span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> 
+                  <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> 
+                  <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> 
+                  <span class="nv">mode</span><span class="p">:</span> <span class="kt">TrustPinMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
+                  <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
 
 <span class="c1">// Setup and configuration with custom CDN</span>
-<span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">TrustPinMode</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
+<span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> 
+                  <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> 
+                  <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> 
+                  <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span>
+                  <span class="nv">mode</span><span class="p">:</span> <span class="kt">TrustPinMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
+                  <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
 
 <span class="c1">// Manual verification  </span>
 <span class="kd">static</span> <span class="kd">func</span> <span class="nf">verify</span><span class="p">(</span><span class="nv">domain</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">certificate</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span>
 
+<span class="c1">// System-wide URLProtocol control</span>
+<span class="kd">static</span> <span class="kd">func</span> <span class="nf">registerURLProtocol</span><span class="p">()</span>    <span class="c1">// Enable system-wide pinning</span>
+<span class="kd">static</span> <span class="kd">func</span> <span class="nf">unregisterURLProtocol</span><span class="p">()</span>  <span class="c1">// Disable system-wide pinning</span>
+
 <span class="c1">// Logging configuration</span>
-<span class="kd">static</span> <span class="kd">func</span> <span class="nf">set</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="kt">TrustPinLogLevel</span><span class="p">)</span>
+<span class="kd">static</span> <span class="kd">func</span> <span class="nf">set</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="kt">TrustPinLogLevel</span><span class="p">)</span> <span class="k">async</span>
+</code></pre>
+<h4 id='urlprotocol-helper-methods-ios-13-0' class='heading'>URLProtocol Helper Methods (iOS 13.0+)</h4>
+<pre class="highlight swift"><code><span class="c1">// Async/await data methods with automatic pinning</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">URLResponse</span><span class="p">)</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">URLResponse</span><span class="p">)</span>
+
+<span class="c1">// Async/await download methods with automatic pinning</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">URL</span><span class="p">,</span> <span class="kt">URLResponse</span><span class="p">)</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">URL</span><span class="p">,</span> <span class="kt">URLResponse</span><span class="p">)</span>
+
+<span class="c1">// Completion handler methods with automatic pinning</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Data</span><span class="p">?,</span> <span class="kt">URLResponse</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URLSessionDataTask</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Data</span><span class="p">?,</span> <span class="kt">URLResponse</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URLSessionDataTask</span>
+
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">downloadTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">URL</span><span class="p">?,</span> <span class="kt">URLResponse</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URLSessionDownloadTask</span>
+<span class="kt">TrustPinURLProtocol</span><span class="o">.</span><span class="nf">downloadTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">using</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">URL</span><span class="p">?,</span> <span class="kt">URLResponse</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URLSessionDownloadTask</span>
+
+<span class="c1">// Create URLSession with pinning enabled</span>
+<span class="kt">URLSession</span><span class="o">.</span><span class="nf">trustPinSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="kt">URLSessionConfiguration</span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> 
+                          <span class="nv">delegate</span><span class="p">:</span> <span class="kt">URLSessionDelegate</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> 
+                          <span class="nv">delegateQueue</span><span class="p">:</span> <span class="kt">OperationQueue</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URLSession</span>
 </code></pre>
 
 <hr>
@@ -665,6 +825,23 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <li>✅ Ensure you&rsquo;re using the correct URLSession delegate</li>
 <li>✅ Check for retain cycles with URLSession</li>
 <li>✅ Verify network connectivity</li>
+<li>✅ Check if URLProtocol is properly registered (when using system-wide pinning)</li>
+</ul>
+<h4 id='strong-system-wide-pinning-not-working-strong' class='heading'><strong>System-Wide Pinning Not Working</strong></h4>
+
+<ul>
+<li>✅ Verify <code>autoRegisterURLProtocol: true</code> was used during setup (default)</li>
+<li>✅ Check that you&rsquo;re testing with HTTPS URLs (HTTP is ignored)</li>
+<li>✅ Ensure URLProtocol hasn&rsquo;t been unregistered elsewhere in the app</li>
+<li>✅ Test with <code><a href="Classes/TrustPin.html#/s:11TrustPinKit0aB0C19registerURLProtocolyyFZ">TrustPin.registerURLProtocol()</a></code> to manually re-register</li>
+</ul>
+<h4 id='strong-urlprotocol-helper-methods-not-found-strong' class='heading'><strong>URLProtocol Helper Methods Not Found</strong></h4>
+
+<ul>
+<li>✅ Ensure you&rsquo;re targeting iOS 13.0+ or equivalent platform versions</li>
+<li>✅ Check that TrustPin has been set up before using helper methods</li>
+<li>✅ Use <code><a href="Classes/TrustPinURLProtocol.html">TrustPinURLProtocol.</a></code> prefix for static helper methods</li>
+<li>✅ Import <code>TrustPinKit</code> module</li>
 </ul>
 <h3 id='debug-steps' class='heading'>Debug Steps</h3>
 
