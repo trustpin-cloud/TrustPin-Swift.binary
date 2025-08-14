@@ -20,9 +20,9 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          TrustPinKit 1.0.0 Docs
+          TrustPinKit 1.1.0 Docs
         </a>
-         (92% documented)
+         (95% documented)
       </p>
     
       <div class="header-col--secondary">
@@ -63,6 +63,9 @@
                 <a class="nav-group-task-link" href="Classes/TrustPinKitResources.html">TrustPinKitResources</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a>
               </li>
             </ul>
@@ -81,6 +84,14 @@
               </li>
             </ul>
           </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/URLSession.html">URLSession</a>
+              </li>
+            </ul>
+          </li>
         <li><a href="coverage/index.html" style="color: #007bff; font-weight: bold;">📊 Coverage</a></li></ul>
       </nav>
       <article class="main-content">
@@ -89,7 +100,7 @@
   <h3 style="margin: 0 0 10px 0; color: white;">📊 Code Coverage</h3>
   <div style="display: inline-flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center;">
     <span class="badge badge-success" style="background: #28a745; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 16px;">
-      94.0% Coverage
+      91.8% Coverage
     </span>
     <a href="coverage/index.html" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500; border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s;" 
        onmouseover="this.style.background='rgba(255,255,255,0.3)'" 
@@ -232,9 +243,111 @@ https://github.com/trustpin-cloud/TrustPin-Swift.binary
     <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">permissive</span>  <span class="c1">// Allows unregistered domains to bypass pinning</span>
 <span class="p">)</span>
 </code></pre>
+<h3 id='3-system-wide-protection-control' class='heading'>3. System-Wide Protection Control</h3>
+
+<p>By default, TrustPin automatically enables certificate pinning for <strong>all URLSession requests</strong> in your app. This provides the broadest security coverage with zero additional configuration.</p>
+<h4 id='automatic-protection-default-amp-recommended' class='heading'>Automatic Protection (Default &amp; Recommended)</h4>
+<pre class="highlight swift"><code><span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"your-base64-public-key"</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span>
+    <span class="c1">// autoRegisterURLProtocol: true (default)</span>
+<span class="p">)</span>
+
+<span class="c1">// All URLSession instances now automatically use certificate pinning</span>
+<span class="c1">// Including URLSession.shared and third-party networking libraries</span>
+</code></pre>
+<h4 id='manual-control-advanced' class='heading'>Manual Control (Advanced)</h4>
+
+<p>For advanced scenarios where you need to control when system-wide pinning is active:</p>
+<pre class="highlight swift"><code><span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"your-base64-public-key"</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
+    <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kc">false</span>  <span class="c1">// Disable automatic system-wide pinning</span>
+<span class="p">)</span>
+
+<span class="c1">// Manually enable/disable system-wide pinning when needed</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">registerURLProtocol</span><span class="p">()</span>    <span class="c1">// Enable</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">unregisterURLProtocol</span><span class="p">()</span>  <span class="c1">// Disable</span>
+</code></pre>
+
+<blockquote>
+<p>💡 <strong>Recommendation</strong>: Use the default automatic protection unless you have specific requirements for controlling URLProtocol registration timing.</p>
+</blockquote>
 
 <hr>
 <h2 id='usage-examples' class='heading'>🛠 Usage Examples</h2>
+<h3 id='system-wide-certificate-pinning-recommended' class='heading'>System-Wide Certificate Pinning (Recommended)</h3>
+
+<p>The simplest approach - TrustPin automatically protects all HTTPS requests across your entire application:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">TrustPinKit</span>
+
+<span class="c1">// In your AppDelegate or App struct</span>
+<span class="kd">func</span> <span class="nf">configureApp</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="c1">// Setup TrustPin - URLProtocol is automatically registered</span>
+    <span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+        <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+        <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span> 
+        <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"your-base64-public-key"</span><span class="p">,</span>
+        <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span>
+    <span class="p">)</span>
+
+    <span class="c1">// That's it! All URLSession requests now use certificate pinning</span>
+<span class="p">}</span>
+
+<span class="c1">// Anywhere in your app - pinning works automatically</span>
+<span class="kd">class</span> <span class="kt">NetworkManager</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">fetchData</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Data</span> <span class="p">{</span>
+        <span class="c1">// URLSession.shared automatically uses certificate pinning</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="p">(</span><span class="nv">data</span><span class="p">,</span> <span class="nv">_</span><span class="p">)</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">fetchWithCustomSession</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Data</span> <span class="p">{</span>
+        <span class="c1">// Custom URLSessions also automatically use certificate pinning</span>
+        <span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="n">ephemeral</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/secure"</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">let</span> <span class="p">(</span><span class="nv">data</span><span class="p">,</span> <span class="nv">_</span><span class="p">)</span> <span class="o">=</span> <span class="k">try</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Third-party libraries using URLSession are also protected!</span>
+<span class="c1">// Alamofire, URLSession-based HTTP clients, etc. automatically get pinning</span>
+</code></pre>
+
+<blockquote>
+<p>🎯 <strong>Benefits</strong>: </p>
+
+<ul>
+<li>Zero configuration after setup</li>
+<li>Protects all URLSession requests system-wide</li>
+<li>Works with third-party networking libraries</li>
+<li>Automatically secures <code>URLSession.shared</code> and custom sessions</li>
+</ul>
+</blockquote>
+<h4 id='manual-control-advanced' class='heading'>Manual Control (Advanced)</h4>
+
+<p>For advanced scenarios where you need control over URLProtocol registration:</p>
+<pre class="highlight swift"><code><span class="c1">// Setup without auto-registration</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"your-base64-public-key"</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
+    <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kc">false</span>  <span class="c1">// Disable auto-registration</span>
+<span class="p">)</span>
+
+<span class="c1">// Manually register when needed</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">registerURLProtocol</span><span class="p">()</span>
+
+<span class="c1">// Unregister when no longer needed</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">unregisterURLProtocol</span><span class="p">()</span>
+</code></pre>
 <h3 id='automatic-urlsession-integration' class='heading'>Automatic URLSession Integration</h3>
 
 <p>The simplest way to add certificate pinning to your network requests:</p>
@@ -602,7 +715,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2025 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2025-08-05)</p>
+      <p>&copy; 2025 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2025-08-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>

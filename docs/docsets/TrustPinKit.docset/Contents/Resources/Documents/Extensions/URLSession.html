@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>TrustPinLogLevel Enumeration Reference</title>
+    <title>URLSession Extension Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -14,9 +14,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/swift/Enum/TrustPinLogLevel" class="dashAnchor"></a>
+    <a name="//apple_ref/swift/Extension/URLSession" class="dashAnchor"></a>
 
-    <a title="TrustPinLogLevel Enumeration Reference"></a>
+    <a title="URLSession Extension Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -50,9 +50,9 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">TrustPinKit</a>
       <img class="carat" src="../img/carat.png" alt=""/>
-      <a class="breadcrumb" href="../Enums.html">Enumerations</a>
+      <a class="breadcrumb" href="../Extensions.html">Extensions</a>
       <img class="carat" src="../img/carat.png" alt=""/>
-      TrustPinLogLevel Enumeration Reference
+      Foundation.URLSession Extension Reference
     </p>
 
     <div class="content-wrapper">
@@ -103,18 +103,15 @@
 
         <section class="section">
           <div class="section-content top-matter">
-            <h1>TrustPinLogLevel</h1>
+            <h1>URLSession</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TrustPinLogLevel</span> <span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Sendable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">URLSession</span></code></pre>
 
                 </div>
               </div>
-            <p>Represents the severity level of a log message.</p>
-
-<p>Used by the TrustPin logging infrastructure to control what types of messages are recorded or displayed.</p>
-
+            
           </div>
         </section>
 
@@ -125,9 +122,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11TrustPinKit0aB8LogLevelO4noneyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/none" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB8LogLevelO4noneyA2CmF">none</a>
+                    <a name="/s:So12NSURLSessionC11TrustPinKitE05trustC7Session13configuration8delegate0H5QueueABSo0A13ConfigurationC_So0A8Delegate_pSgSo011NSOperationI0CSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/trustPinSession(configuration:delegate:delegateQueue:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So12NSURLSessionC11TrustPinKitE05trustC7Session13configuration8delegate0H5QueueABSo0A13ConfigurationC_So0A8Delegate_pSgSo011NSOperationI0CSgtFZ">trustPinSession(configuration:<wbr>delegate:<wbr>delegateQueue:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -135,95 +132,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Logging is disabled.</p>
+                        <p>Creates a URLSession with TrustPin certificate pinning enabled</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="k">none</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11TrustPinKit0aB8LogLevelO5erroryA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/error" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB8LogLevelO5erroryA2CmF">error</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Log only error-level messages.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">error</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11TrustPinKit0aB8LogLevelO4infoyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/info" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB8LogLevelO4infoyA2CmF">info</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Log informational messages and errors.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">info</span> <span class="o">=</span> <span class="mi">2</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11TrustPinKit0aB8LogLevelO5debugyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/debug" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB8LogLevelO5debugyA2CmF">debug</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Log debug, informational, and error messages.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">3</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">func</span> <span class="nf">trustPinSession</span><span class="p">(</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt">URLSessionConfiguration</span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="kt">URLSessionDelegate</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">delegateQueue</span><span class="p">:</span> <span class="kt">OperationQueue</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URLSession</span></code></pre>
 
                         </div>
                       </div>

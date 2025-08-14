@@ -46,13 +46,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `1.0.0` or later
+3. **Select version:** `1.1.0` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "1.0.0")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "1.1.0")
 ],
 targets: [
     .target(
@@ -121,9 +121,115 @@ try await TrustPin.setup(
 )
 ```
 
+### 3. System-Wide Protection Control
+
+By default, TrustPin automatically enables certificate pinning for **all URLSession requests** in your app. This provides the broadest security coverage with zero additional configuration.
+
+#### Automatic Protection (Default & Recommended)
+```swift
+try await TrustPin.setup(
+    organizationId: "your-org-id",
+    projectId: "your-project-id",
+    publicKey: "your-base64-public-key",
+    mode: .strict
+    // autoRegisterURLProtocol: true (default)
+)
+
+// All URLSession instances now automatically use certificate pinning
+// Including URLSession.shared and third-party networking libraries
+```
+
+#### Manual Control (Advanced)
+For advanced scenarios where you need to control when system-wide pinning is active:
+
+```swift
+try await TrustPin.setup(
+    organizationId: "your-org-id",
+    projectId: "your-project-id",
+    publicKey: "your-base64-public-key",
+    mode: .strict,
+    autoRegisterURLProtocol: false  // Disable automatic system-wide pinning
+)
+
+// Manually enable/disable system-wide pinning when needed
+TrustPin.registerURLProtocol()    // Enable
+TrustPin.unregisterURLProtocol()  // Disable
+```
+
+> 💡 **Recommendation**: Use the default automatic protection unless you have specific requirements for controlling URLProtocol registration timing.
+
 ---
 
 ## 🛠 Usage Examples
+
+### System-Wide Certificate Pinning (Recommended)
+
+The simplest approach - TrustPin automatically protects all HTTPS requests across your entire application:
+
+```swift
+import TrustPinKit
+
+// In your AppDelegate or App struct
+func configureApp() async throws {
+    // Setup TrustPin - URLProtocol is automatically registered
+    try await TrustPin.setup(
+        organizationId: "your-org-id",
+        projectId: "your-project-id", 
+        publicKey: "your-base64-public-key",
+        mode: .strict
+    )
+    
+    // That's it! All URLSession requests now use certificate pinning
+}
+
+// Anywhere in your app - pinning works automatically
+class NetworkManager {
+    func fetchData() async throws -> Data {
+        // URLSession.shared automatically uses certificate pinning
+        let url = URL(string: "https://api.example.com/data")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        return data
+    }
+    
+    func fetchWithCustomSession() async throws -> Data {
+        // Custom URLSessions also automatically use certificate pinning
+        let session = URLSession(configuration: .ephemeral)
+        let url = URL(string: "https://api.example.com/secure")!
+        let (data, _) = try await session.data(from: url)
+        return data
+    }
+}
+
+// Third-party libraries using URLSession are also protected!
+// Alamofire, URLSession-based HTTP clients, etc. automatically get pinning
+```
+
+> 🎯 **Benefits**: 
+> - Zero configuration after setup
+> - Protects all URLSession requests system-wide
+> - Works with third-party networking libraries
+> - Automatically secures `URLSession.shared` and custom sessions
+
+#### Manual Control (Advanced)
+
+For advanced scenarios where you need control over URLProtocol registration:
+
+```swift
+// Setup without auto-registration
+try await TrustPin.setup(
+    organizationId: "your-org-id",
+    projectId: "your-project-id",
+    publicKey: "your-base64-public-key",
+    mode: .strict,
+    autoRegisterURLProtocol: false  // Disable auto-registration
+)
+
+// Manually register when needed
+TrustPin.registerURLProtocol()
+
+// Unregister when no longer needed
+TrustPin.unregisterURLProtocol()
+```
 
 ### Automatic URLSession Integration
 
