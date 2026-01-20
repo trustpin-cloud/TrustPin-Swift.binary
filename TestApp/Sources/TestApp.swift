@@ -6,7 +6,6 @@ struct TestApp: App {
         WindowGroup {
             ContentView()
                 .accentColor(Color("AccentColor"))
-
         }
     }
 }
