@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 2.1.0 Docs
+          TrustPinKit 2.1.1 Docs
         </a>
          (95% documented)
       </p>
@@ -123,7 +123,7 @@ both security posture and application flexibility.</p>
 <ul>
 <li><strong>Production applications</strong>: Use <code>strict</code> mode to ensure all connections are validated</li>
 <li><strong>Development/Testing</strong>: Use <code>permissive</code> mode to allow connections to test servers</li>
-<li><strong>Hybrid applications</strong>: Use <code>permissive</code> mode when connecting to dynamic third-party services</li>
+<li><strong>Hybrid applications</strong>: Use <code>permissive</code> mode when connecting to both controlled and uncontrolled services</li>
 </ul>
 <h2 id='usage-examples' class='heading'>Usage Examples</h2>
 <h3 id='strict-mode-production' class='heading'>Strict Mode (Production)</h3>
@@ -263,7 +263,7 @@ while still securing critical API endpoints.</p>
 <li>✅ <strong>Applications with dynamic endpoints</strong> (user-generated content, third-party services)</li>
 <li>✅ <strong>Gradual migration</strong> to certificate pinning in existing applications</li>
 <li>✅ <strong>Third-party SDK integrations</strong> with unknown domains</li>
-<li>✅ <strong>Hybrid applications</strong> connecting to both controlled and external services</li>
+<li>✅ <strong>Hybrid applications</strong> connecting to both controlled and uncontrolled services</li>
 </ul>
 <h2 id='security-considerations' class='heading'>Security Considerations</h2>
 
