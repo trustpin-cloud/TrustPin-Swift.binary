@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 2.0.0 Docs
+          TrustPinKit 2.1.0 Docs
         </a>
          (95% documented)
       </p>
@@ -97,7 +97,7 @@
               </li>
             </ul>
           </li>
-        <li><a href="coverage/index.html" style="color: #007bff; font-weight: bold;">📊 Coverage</a></li></ul>
+        </ul>
       </nav>
       <article class="main-content">
 
@@ -230,11 +230,17 @@ for 10 minutes to optimize performance and reduce network requests.</p>
 <li><strong>Development</strong>: Use <code><a href="../Enums/TrustPinMode.html#/s:11TrustPinKit0aB4ModeO10permissiveyA2CmF">permissive</a></code> mode to allow connections to unregistered domains</li>
 <li><strong>Credentials</strong>: Keep your public key secure and never commit it to version control in plain text</li>
 </ul>
-<h2 id='automatic-certificate-pinning' class='heading'>Automatic Certificate Pinning</h2>
+<h2 id='certificate-pinning-options' class='heading'>Certificate Pinning Options</h2>
 
-<p>When this method completes successfully, TrustPin automatically registers a URLProtocol
-that intercepts all HTTPS requests system-wide, applying certificate pinning transparently.
-This means:</p>
+<p>By default, you need to manually integrate certificate pinning using one of these approaches:</p>
+
+<ol>
+<li>Use <code><a href="../Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a></code> for specific URLSession instances</li>
+<li>Set <code>autoRegisterURLProtocol: true</code> to automatically register a URLProtocol that
+intercepts all HTTPS requests system-wide</li>
+</ol>
+
+<p>When using automatic URLProtocol registration:</p>
 
 <ul>
 <li>All <code>URLSession</code> instances (including <code>URLSession.shared</code>) will use certificate pinning</li>
@@ -281,7 +287,7 @@ and can reach this endpoint.</p>
                          <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
-                         <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
+                         <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -345,7 +351,7 @@ and can reach this endpoint.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Whether to automatically register URLProtocol for system-wide pinning (default: <code>true</code>)</p>
+                                  <p>Whether to automatically register URLProtocol for system-wide pinning (default: <code>false</code>)</p>
                                 </div>
                               </td>
                             </tr>
@@ -428,7 +434,7 @@ deployment scenarios or when using alternative configuration endpoints.</p>
                          <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
                          <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span>
                          <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
-                         <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
+                         <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -456,7 +462,7 @@ deployment scenarios or when using alternative configuration endpoints.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Your project identifier from the TrustPin dashboard<br></p>
+                                  <p>Your project identifier from the TrustPin dashboard</p>
                                 </div>
                               </td>
                             </tr>
@@ -504,7 +510,7 @@ deployment scenarios or when using alternative configuration endpoints.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Whether to automatically register URLProtocol for system-wide pinning (default: <code>true</code>)</p>
+                                  <p>Whether to automatically register URLProtocol for system-wide pinning (default: <code>false</code>)</p>
                                 </div>
                               </td>
                             </tr>
@@ -831,7 +837,7 @@ security events. Different log levels provide varying amounts of detail.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-01-27)</p>
+      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-09)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>

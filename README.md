@@ -47,13 +47,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `2.0.0` or later
+3. **Select version:** `2.1.0` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "2.0.0")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "2.1.0")
 ],
 targets: [
     .target(
@@ -94,7 +94,7 @@ try await TrustPin.setup(
     organizationId: "your-org-id",
     projectId: "your-project-id", 
     publicKey: "your-base64-public-key",
-    mode: .strict  // Recommended for production
+    mode: .strict  // Recommended
 )
 ```
 
@@ -106,7 +106,7 @@ try await TrustPin.setup(
 
 TrustPin offers two validation modes:
 
-#### Strict Mode (Recommended for Production)
+#### Strict Mode (Recommended)
 ```swift
 try await TrustPin.setup(
     // ... your credentials
@@ -122,34 +122,49 @@ try await TrustPin.setup(
 )
 ```
 
-### 3. System-Wide Protection Control
+### 3. Integration Approach
 
-By default, TrustPin automatically enables certificate pinning for **all URLSession requests** in your app. This provides the broadest security coverage with zero additional configuration.
+TrustPin requires you to explicitly choose how to integrate certificate pinning into your app. The recommended approach is to use `TrustPinURLSessionDelegate` for specific sessions, providing precise control over which connections are pinned.
 
-#### Automatic Protection (Default & Recommended)
+#### URLSessionDelegate (Recommended - Default)
 ```swift
 try await TrustPin.setup(
     organizationId: "your-org-id",
     projectId: "your-project-id",
     publicKey: "your-base64-public-key",
     mode: .strict
-    // autoRegisterURLProtocol: true (default)
 )
 
-// All URLSession instances now automatically use certificate pinning
-// Including URLSession.shared and third-party networking libraries
+// Use TrustPinURLSessionDelegate for specific URLSession instances
+let trustPinDelegate = TrustPinURLSessionDelegate()
+let session = URLSession(
+    configuration: .default,
+    delegate: trustPinDelegate,
+    delegateQueue: nil
+)
 ```
 
-#### Manual Control (Advanced)
-For advanced scenarios where you need to control when system-wide pinning is active:
-
+#### System-Wide URLProtocol (Advanced Use Cases)
 ```swift
 try await TrustPin.setup(
     organizationId: "your-org-id",
     projectId: "your-project-id",
     publicKey: "your-base64-public-key",
     mode: .strict,
-    autoRegisterURLProtocol: false  // Disable automatic system-wide pinning
+    autoRegisterURLProtocol: true  // Enable automatic system-wide pinning
+)
+
+// All URLSession instances now automatically use certificate pinning
+// Including URLSession.shared and third-party networking libraries
+```
+
+#### Manual URLProtocol Control (Advanced)
+```swift
+try await TrustPin.setup(
+    organizationId: "your-org-id",
+    projectId: "your-project-id",
+    publicKey: "your-base64-public-key",
+    mode: .strict
 )
 
 // Manually enable/disable system-wide pinning when needed
@@ -157,33 +172,34 @@ TrustPin.registerURLProtocol()    // Enable
 TrustPin.unregisterURLProtocol()  // Disable
 ```
 
-> 💡 **Recommendation**: Use the default automatic protection unless you have specific requirements for controlling URLProtocol registration timing.
+> 💡 **Recommendation**: Use URLSessionDelegate (default) for precise control and best practices. Use system-wide URLProtocol only when you need to protect third-party libraries or cannot modify URLSession creation code.
 
 ---
 
 ## 🛠 Integration Approaches
 
-TrustPin offers three different ways to integrate certificate pinning into your application:
+TrustPin offers three integration methods:
 
 | Approach | Best For | Setup Complexity | Coverage |
 |----------|----------|------------------|----------|
-| **System-Wide URLProtocol** (Recommended) | Most applications, zero-config after setup | 🟢 Minimal | All URLSession requests |
-| **URLSessionDelegate** | Custom URLSession setups, granular control | 🟡 Medium | Specific URLSession instances |
+| **URLSessionDelegate** (Recommended) | Most applications, precise control | 🟢 Minimal | Specific URLSession instances |
+| **System-Wide URLProtocol** | Third-party library protection, legacy code | 🟡 Medium | All URLSession requests |
 | **Helper Methods** | Explicit control, static method preference | 🟠 Per-request | Individual requests |
 
 ### When to Choose Each Approach
 
-#### System-Wide URLProtocol (Default & Recommended)
-- ✅ **Broad protection**: Automatically secures all URLSession requests
-- ✅ **Zero configuration**: Works with existing networking code
-- ✅ **Third-party compatibility**: Protects libraries using URLSession  
-- ✅ **Maintainability**: Single setup call for entire app
-
-#### URLSessionDelegate  
-- ✅ **Granular control**: Only specific URLSession instances use pinning
-- ✅ **Legacy compatibility**: Works with older networking patterns
+#### URLSessionDelegate (Default & Recommended)
+- ✅ **Precise control**: Only specific URLSession instances use pinning
+- ✅ **Best practices**: Explicit delegate pattern following Apple guidelines
 - ✅ **Custom delegation**: Integrate with existing URLSessionDelegate code
 - ✅ **Selective pinning**: Mix pinned and non-pinned sessions in same app
+- ✅ **Predictable behavior**: No global state changes
+
+#### System-Wide URLProtocol
+- ✅ **Broad protection**: Automatically secures all URLSession requests
+- ✅ **Zero configuration**: Works with existing networking code without changes
+- ✅ **Third-party compatibility**: Protects libraries using URLSession
+- ⚠️ **Global impact**: Affects all URLSession instances in the app
 
 #### Helper Methods
 - ✅ **Explicit requests**: Clear intent for which requests use pinning  
@@ -195,23 +211,80 @@ TrustPin offers three different ways to integrate certificate pinning into your 
 
 ## 🛠 Usage Examples
 
-### System-Wide Certificate Pinning (Recommended)
+### URLSessionDelegate Integration (Recommended)
 
-The simplest approach - TrustPin automatically protects all HTTPS requests across your entire application:
+The recommended approach - use TrustPinURLSessionDelegate for precise control over which URLSessions use certificate pinning:
 
 ```swift
 import TrustPinKit
 
 // In your AppDelegate or App struct
 func configureApp() async throws {
-    // Setup TrustPin - URLProtocol is automatically registered
+    // Setup TrustPin
     try await TrustPin.setup(
         organizationId: "your-org-id",
-        projectId: "your-project-id", 
+        projectId: "your-project-id",
         publicKey: "your-base64-public-key",
         mode: .strict
     )
-    
+}
+
+// Create a network manager with pinned URLSession
+class NetworkManager {
+    private let trustPinDelegate = TrustPinURLSessionDelegate()
+    private lazy var session = URLSession(
+        configuration: .default,
+        delegate: trustPinDelegate,
+        delegateQueue: nil
+    )
+
+    func fetchData() async throws -> Data {
+        let url = URL(string: "https://api.example.com/data")!
+        let (data, _) = try await session.data(from: url)
+        return data
+    }
+
+    func fetchWithCustomConfig() async throws -> Data {
+        let config = URLSessionConfiguration.ephemeral
+        config.timeoutIntervalForRequest = 30
+
+        let customSession = URLSession(
+            configuration: config,
+            delegate: trustPinDelegate,
+            delegateQueue: nil
+        )
+
+        let url = URL(string: "https://api.example.com/secure")!
+        let (data, _) = try await customSession.data(from: url)
+        return data
+    }
+}
+```
+
+> 🎯 **Benefits**:
+> - Explicit control over which sessions use pinning
+> - No global state changes
+> - Follows Apple's recommended patterns
+> - Easy to test and debug
+
+### System-Wide Certificate Pinning (Advanced)
+
+For scenarios where you need to protect third-party libraries or cannot modify URLSession creation:
+
+```swift
+import TrustPinKit
+
+// In your AppDelegate or App struct
+func configureApp() async throws {
+    // Setup TrustPin with system-wide URLProtocol registration
+    try await TrustPin.setup(
+        organizationId: "your-org-id",
+        projectId: "your-project-id",
+        publicKey: "your-base64-public-key",
+        mode: .strict,
+        autoRegisterURLProtocol: true  // Enable system-wide pinning
+    )
+
     // That's it! All URLSession requests now use certificate pinning
 }
 
@@ -223,27 +296,15 @@ class NetworkManager {
         let (data, _) = try await URLSession.shared.data(from: url)
         return data
     }
-    
-    func fetchWithCustomSession() async throws -> Data {
-        // Custom URLSessions also automatically use certificate pinning
-        let session = URLSession(configuration: .ephemeral)
-        let url = URL(string: "https://api.example.com/secure")!
-        let (data, _) = try await session.data(from: url)
-        return data
-    }
 }
 
 // Third-party libraries using URLSession are also protected!
 // Alamofire, URLSession-based HTTP clients, etc. automatically get pinning
 ```
 
-> 🎯 **Benefits**: 
-> - Zero configuration after setup
-> - Protects all URLSession requests system-wide
-> - Works with third-party networking libraries
-> - Automatically secures `URLSession.shared` and custom sessions
+> ⚠️ **Note**: This approach affects all URLSession instances globally. Use with caution.
 
-#### Manual Control (Advanced)
+#### Manual URLProtocol Control (Advanced)
 
 For advanced scenarios where you need control over URLProtocol registration:
 
@@ -253,8 +314,7 @@ try await TrustPin.setup(
     organizationId: "your-org-id",
     projectId: "your-project-id",
     publicKey: "your-base64-public-key",
-    mode: .strict,
-    autoRegisterURLProtocol: false  // Disable auto-registration
+    mode: .strict
 )
 
 // Manually register when needed
@@ -614,19 +674,19 @@ func performNetworkRequest() async -> Data? {
 
 ```swift
 // Setup and configuration (standard)
-static func setup(organizationId: String, 
-                  projectId: String, 
-                  publicKey: String, 
+static func setup(organizationId: String,
+                  projectId: String,
+                  publicKey: String,
                   mode: TrustPinMode = .strict,
-                  autoRegisterURLProtocol: Bool = true) async throws
+                  autoRegisterURLProtocol: Bool = false) async throws
 
 // Setup and configuration with custom CDN
-static func setup(organizationId: String, 
-                  projectId: String, 
-                  publicKey: String, 
+static func setup(organizationId: String,
+                  projectId: String,
+                  publicKey: String,
                   configurationURL: URL,
                   mode: TrustPinMode = .strict,
-                  autoRegisterURLProtocol: Bool = true) async throws
+                  autoRegisterURLProtocol: Bool = false) async throws
 
 // Manual verification  
 static func verify(domain: String, certificate: String) async throws
@@ -689,10 +749,10 @@ URLSession.trustPinSession(configuration: URLSessionConfiguration = .default,
 - ✅ Check if URLProtocol is properly registered (when using system-wide pinning)
 
 #### **System-Wide Pinning Not Working**
-- ✅ Verify `autoRegisterURLProtocol: true` was used during setup (default)
+- ✅ Verify `autoRegisterURLProtocol: true` was used during setup (not enabled by default)
 - ✅ Check that you're testing with HTTPS URLs (HTTP is ignored)
 - ✅ Ensure URLProtocol hasn't been unregistered elsewhere in the app
-- ✅ Test with `TrustPin.registerURLProtocol()` to manually re-register
+- ✅ Test with `TrustPin.registerURLProtocol()` to manually register if not done during setup
 
 #### **URLProtocol Helper Methods Not Found**
 - ✅ Ensure you're targeting iOS 13.0+ or equivalent platform versions
