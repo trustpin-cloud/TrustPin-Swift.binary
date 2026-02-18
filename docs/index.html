@@ -65,9 +65,6 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
               </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a>
-              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -247,7 +244,7 @@ https://github.com/trustpin-cloud/TrustPin-Swift.binary
 </code></pre>
 <h3 id='3-integration-approach' class='heading'>3. Integration Approach</h3>
 
-<p>TrustPin requires you to explicitly choose how to integrate certificate pinning into your app. The recommended approach is to use <code><a href="Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a></code> for specific sessions, providing precise control over which connections are pinned.</p>
+<p>TrustPin requires you to explicitly choose how to integrate certificate pinning into your app. The recommended approach is to use <code>TrustPinURLSessionDelegate</code> for specific sessions, providing precise control over which connections are pinned.</p>
 <h4 id='urlsessiondelegate-recommended-default' class='heading'>URLSessionDelegate (Recommended - Default)</h4>
 <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
     <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
@@ -795,7 +792,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <li><strong><code><a href="Classes/TrustPin.html">TrustPin</a></code></strong> - Main SDK interface; supports a default singleton and named multi-instances</li>
 <li><strong><code><a href="Structs/TrustPinConfiguration.html">TrustPinConfiguration</a></code></strong> - Value type grouping all setup options (v3 preferred)</li>
 <li><strong><code><a href="Enums/TrustPinMode.html">TrustPinMode</a></code></strong> - Enum defining pinning behavior modes (<code>.strict</code>, <code>.permissive</code>)</li>
-<li><strong><code><a href="Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a></code></strong> - URLSession delegate for automatic validation</li>
+<li><strong><code>TrustPinURLSessionDelegate</code></strong> - URLSession delegate for automatic validation</li>
 <li><strong><code><a href="Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a></code></strong> - URLProtocol implementation for system-wide pinning (iOS 13.0+)</li>
 <li><strong><code><a href="Enums/TrustPinErrors.html">TrustPinErrors</a></code></strong> - Error types for detailed error handling</li>
 <li><strong><code><a href="Enums/TrustPinLogLevel.html">TrustPinLogLevel</a></code></strong> - Logging configuration options (<code>.none</code>, <code>.error</code>, <code>.info</code>, <code>.debug</code>)</li>

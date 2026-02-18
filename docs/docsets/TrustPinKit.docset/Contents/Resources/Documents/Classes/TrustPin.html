@@ -70,9 +70,6 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
               </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a>
-              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -227,7 +224,7 @@ to avoid collisions with other libraries.</p>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p><code>URLProtocol</code> registration is not available on named instances.
-Use <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C22makeURLSessionDelegateAA0abeF0CyF">makeURLSessionDelegate()</a></code> for library-scoped pinning.</p>
+Use <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C22makeURLSessionDelegateSo012NSURLSessionF0_pyF">makeURLSessionDelegate()</a></code> for library-scoped pinning.</p>
 
 </div>
 
@@ -547,9 +544,9 @@ connection without sending any HTTP data.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11TrustPinKit0aB0C22makeURLSessionDelegateAA0abeF0CyF"></a>
+                    <a name="/s:11TrustPinKit0aB0C22makeURLSessionDelegateSo012NSURLSessionF0_pyF"></a>
                     <a name="//apple_ref/swift/Method/makeURLSessionDelegate()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB0C22makeURLSessionDelegateAA0abeF0CyF">makeURLSessionDelegate()</a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C22makeURLSessionDelegateSo012NSURLSessionF0_pyF">makeURLSessionDelegate()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -557,7 +554,7 @@ connection without sending any HTTP data.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Returns a <code><a href="../Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a></code> bound to this instance.</p>
+                        <p>Returns a <code>URLSessionDelegate</code> bound to this instance that performs certificate pinning.</p>
 
 <p>Use this for library-scoped pinning instead of the global URLProtocol:</p>
 <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span>
@@ -572,7 +569,42 @@ connection without sending any HTTP data.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">makeURLSessionDelegate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">makeURLSessionDelegate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">any</span> <span class="kt">URLSessionDelegate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB0C22makeURLSessionDelegateSo012NSURLSessionF0_pyFZ"></a>
+                    <a name="//apple_ref/swift/Method/makeURLSessionDelegate()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB0C22makeURLSessionDelegateSo012NSURLSessionF0_pyFZ">makeURLSessionDelegate()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a <code>URLSessionDelegate</code> bound to the <strong>default</strong> <code>TrustPin</code> instance.</p>
+
+<p>Equivalent to <code>TrustPin.default.makeURLSessionDelegate()</code>.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">makeURLSessionDelegate</span><span class="p">(),</span>
+    <span class="nv">delegateQueue</span><span class="p">:</span> <span class="kc">nil</span>
+<span class="p">)</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">makeURLSessionDelegate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">any</span> <span class="kt">URLSessionDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -789,7 +821,7 @@ preserving source compatibility for callers that have not yet migrated to the st
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     Only available on the <strong>default</strong> instance. Libraries should use
-<code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C22makeURLSessionDelegateAA0abeF0CyF">makeURLSessionDelegate()</a></code> instead.
+<code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C22makeURLSessionDelegateSo012NSURLSessionF0_pyF">makeURLSessionDelegate()</a></code> instead.
 
 </div>
 

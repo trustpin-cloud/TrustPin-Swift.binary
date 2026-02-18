@@ -68,9 +68,6 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
               </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a>
-              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -247,48 +244,6 @@ on named instances — libraries should use <code>makeURLSessionDelegate()</code
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TrustPin</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@TrustPinKit@objc(cs)TrustPinURLSessionDelegate"></a>
-                    <a name="//apple_ref/swift/Class/TrustPinURLSessionDelegate" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@TrustPinKit@objc(cs)TrustPinURLSessionDelegate">TrustPinURLSessionDelegate</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>A <code>URLSessionDelegate</code> that performs certificate pinning using a specific <code><a href="Classes/TrustPin.html">TrustPin</a></code> instance.</p>
-<h2 id='default-instance' class='heading'>Default instance</h2>
-<pre class="highlight swift"><code><span class="c1">// Uses TrustPin.default — equivalent to pre-multi-instance behaviour</span>
-<span class="k">let</span> <span class="nv">delegate</span> <span class="o">=</span> <span class="kt">TrustPinURLSessionDelegate</span><span class="p">()</span>
-<span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="n">delegate</span><span class="p">,</span> <span class="nv">delegateQueue</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
-</code></pre>
-<h2 id='named-instance-library-use' class='heading'>Named instance (library use)</h2>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">pin</span> <span class="o">=</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">instance</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="s">"com.mylib"</span><span class="p">)</span>
-<span class="k">try</span> <span class="k">await</span> <span class="n">pin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-
-<span class="k">let</span> <span class="nv">delegate</span> <span class="o">=</span> <span class="n">pin</span><span class="o">.</span><span class="nf">makeURLSessionDelegate</span><span class="p">()</span>
-<span class="c1">// or equivalently:</span>
-<span class="k">let</span> <span class="nv">delegate</span> <span class="o">=</span> <span class="kt">TrustPinURLSessionDelegate</span><span class="p">(</span><span class="nv">instance</span><span class="p">:</span> <span class="n">pin</span><span class="p">)</span>
-<span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="n">delegate</span><span class="p">,</span> <span class="nv">delegateQueue</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
-</code></pre>
-
-                        <a href="Classes/TrustPinURLSessionDelegate.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TrustPinURLSessionDelegate</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">URLSessionDelegate</span></code></pre>
 
                         </div>
                       </div>
