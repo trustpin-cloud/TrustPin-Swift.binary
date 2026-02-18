@@ -2,7 +2,11 @@ import Foundation
 import TrustPinKit
 
 final actor NetworkService {
-    private let trustPinDelegate = TrustPinURLSessionDelegate()
+    private let sessionDelegate: URLSessionDelegate!
+
+    init() {
+        self.sessionDelegate = TrustPin.makeURLSessionDelegate()
+    }
     
     func testConnection(url: String) async throws -> NetworkTestResult {
         guard let url = URL(string: url) else {
@@ -13,7 +17,7 @@ final actor NetworkService {
         request.setValue("TrustPin-iOS-Sample/1.0", forHTTPHeaderField: "User-Agent")
         
         let config = URLSessionConfiguration.ephemeral
-        let session = URLSession(configuration: config, delegate: trustPinDelegate, delegateQueue: nil)
+        let session = URLSession(configuration: config, delegate: sessionDelegate, delegateQueue: nil)
         
         do {
             let (data, response) = try await session.data(for: request)

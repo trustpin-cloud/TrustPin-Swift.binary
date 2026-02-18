@@ -47,13 +47,13 @@ Add TrustPin to your project using Xcode:
    ```
    https://github.com/trustpin-cloud/TrustPin-Swift.binary
    ```
-3. **Select version:** `2.1.1` or later
+3. **Select version:** `3.0.0` or later
 
 #### Manual Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "2.1.1")
+    .package(url: "https://github.com/trustpin-cloud/TrustPin-Swift.binary", from: "3.0.0")
 ],
 targets: [
     .target(
@@ -90,12 +90,13 @@ The podspec is hosted at [TrustPin-Swift.binary](https://github.com/trustpin-clo
 import TrustPinKit
 
 // Configure TrustPin with your project credentials
-try await TrustPin.setup(
+var config = TrustPinConfiguration(
     organizationId: "your-org-id",
-    projectId: "your-project-id", 
-    publicKey: "your-base64-public-key",
-    mode: .strict  // Recommended
+    projectId: "your-project-id",
+    publicKey: "your-base64-public-key"
 )
+config.mode = .strict  // Recommended
+try await TrustPin.setup(config)
 ```
 
 > 💡 **Find your credentials** in the [TrustPin Dashboard](https://app.trustpin.cloud)
@@ -108,18 +109,16 @@ TrustPin offers two validation modes:
 
 #### Strict Mode (Recommended)
 ```swift
-try await TrustPin.setup(
-    // ... your credentials
-    mode: .strict  // Throws error for unregistered domains
-)
+var config = TrustPinConfiguration(organizationId: "your-org-id", projectId: "your-project-id", publicKey: "your-base64-public-key")
+config.mode = .strict  // Throws error for unregistered domains
+try await TrustPin.setup(config)
 ```
 
 #### Permissive Mode (Development & Testing)
 ```swift
-try await TrustPin.setup(
-    // ... your credentials  
-    mode: .permissive  // Allows unregistered domains to bypass pinning
-)
+var config = TrustPinConfiguration(organizationId: "your-org-id", projectId: "your-project-id", publicKey: "your-base64-public-key")
+config.mode = .permissive  // Allows unregistered domains to bypass pinning
+try await TrustPin.setup(config)
 ```
 
 ### 3. Integration Approach
@@ -128,12 +127,12 @@ TrustPin requires you to explicitly choose how to integrate certificate pinning 
 
 #### URLSessionDelegate (Recommended - Default)
 ```swift
-try await TrustPin.setup(
+let config = TrustPinConfiguration(
     organizationId: "your-org-id",
     projectId: "your-project-id",
-    publicKey: "your-base64-public-key",
-    mode: .strict
+    publicKey: "your-base64-public-key"
 )
+try await TrustPin.setup(config)
 
 // Use TrustPinURLSessionDelegate for specific URLSession instances
 let trustPinDelegate = TrustPinURLSessionDelegate()
@@ -146,13 +145,12 @@ let session = URLSession(
 
 #### System-Wide URLProtocol (Advanced Use Cases)
 ```swift
-try await TrustPin.setup(
+let config = TrustPinConfiguration(
     organizationId: "your-org-id",
     projectId: "your-project-id",
-    publicKey: "your-base64-public-key",
-    mode: .strict,
-    autoRegisterURLProtocol: true  // Enable automatic system-wide pinning
+    publicKey: "your-base64-public-key"
 )
+try await TrustPin.setup(config, autoRegisterURLProtocol: true)
 
 // All URLSession instances now automatically use certificate pinning
 // Including URLSession.shared and third-party networking libraries
@@ -160,12 +158,12 @@ try await TrustPin.setup(
 
 #### Manual URLProtocol Control (Advanced)
 ```swift
-try await TrustPin.setup(
+let config = TrustPinConfiguration(
     organizationId: "your-org-id",
     projectId: "your-project-id",
-    publicKey: "your-base64-public-key",
-    mode: .strict
+    publicKey: "your-base64-public-key"
 )
+try await TrustPin.setup(config)
 
 // Manually enable/disable system-wide pinning when needed
 TrustPin.registerURLProtocol()    // Enable
@@ -221,12 +219,12 @@ import TrustPinKit
 // In your AppDelegate or App struct
 func configureApp() async throws {
     // Setup TrustPin
-    try await TrustPin.setup(
+    let config = TrustPinConfiguration(
         organizationId: "your-org-id",
         projectId: "your-project-id",
-        publicKey: "your-base64-public-key",
-        mode: .strict
+        publicKey: "your-base64-public-key"
     )
+    try await TrustPin.setup(config)
 }
 
 // Create a network manager with pinned URLSession
@@ -277,13 +275,12 @@ import TrustPinKit
 // In your AppDelegate or App struct
 func configureApp() async throws {
     // Setup TrustPin with system-wide URLProtocol registration
-    try await TrustPin.setup(
+    let config = TrustPinConfiguration(
         organizationId: "your-org-id",
         projectId: "your-project-id",
-        publicKey: "your-base64-public-key",
-        mode: .strict,
-        autoRegisterURLProtocol: true  // Enable system-wide pinning
+        publicKey: "your-base64-public-key"
     )
+    try await TrustPin.setup(config, autoRegisterURLProtocol: true)
 
     // That's it! All URLSession requests now use certificate pinning
 }
@@ -310,12 +307,12 @@ For advanced scenarios where you need control over URLProtocol registration:
 
 ```swift
 // Setup without auto-registration
-try await TrustPin.setup(
+let config = TrustPinConfiguration(
     organizationId: "your-org-id",
     projectId: "your-project-id",
-    publicKey: "your-base64-public-key",
-    mode: .strict
+    publicKey: "your-base64-public-key"
 )
+try await TrustPin.setup(config)
 
 // Manually register when needed
 TrustPin.registerURLProtocol()
@@ -441,12 +438,12 @@ class AppDelegate: UIApplicationDelegate {
         Task {
             do {
                 // Setup TrustPin once during app launch
-                try await TrustPin.setup(
+                let config = TrustPinConfiguration(
                     organizationId: "your-org-id",
                     projectId: "your-project-id",
-                    publicKey: "your-public-key",
-                    mode: .strict
+                    publicKey: "your-public-key"
                 )
+                try await TrustPin.setup(config)
                 print("✅ TrustPin initialized successfully")
             } catch {
                 print("❌ TrustPin setup failed: \(error)")
@@ -661,7 +658,8 @@ func performNetworkRequest() async -> Data? {
 
 ### Core Classes
 
-- **`TrustPin`** - Main SDK interface for setup and verification
+- **`TrustPin`** - Main SDK interface; supports a default singleton and named multi-instances
+- **`TrustPinConfiguration`** - Value type grouping all setup options (v3 preferred)
 - **`TrustPinMode`** - Enum defining pinning behavior modes (`.strict`, `.permissive`)
 - **`TrustPinURLSessionDelegate`** - URLSession delegate for automatic validation
 - **`TrustPinURLProtocol`** - URLProtocol implementation for system-wide pinning (iOS 13.0+)
@@ -673,30 +671,58 @@ func performNetworkRequest() async -> Data? {
 #### Core TrustPin API
 
 ```swift
-// Setup and configuration (standard)
+// ── Instance creation ──────────────────────────────────────────────────────
+
+// Default instance (used by all static convenience methods)
+static let `default`: TrustPin
+
+// Named instance for library / multi-tenant use (process-global, thread-safe registry)
+static func instance(id: String) -> TrustPin
+
+// ── Setup (preferred — struct-based) ──────────────────────────────────────
+
+// Instance method
+func setup(_ configuration: TrustPinConfiguration) async throws
+
+// Static convenience (delegates to TrustPin.default)
+static func setup(_ configuration: TrustPinConfiguration,
+                  autoRegisterURLProtocol: Bool = false) async throws
+
+// ── Setup (compatibility overload — flat parameters, unchanged from v2) ───
+
 static func setup(organizationId: String,
                   projectId: String,
                   publicKey: String,
                   mode: TrustPinMode = .strict,
+                  logLevel: TrustPinLogLevel = .info,
+                  configurationURL: URL? = nil,
                   autoRegisterURLProtocol: Bool = false) async throws
 
-// Setup and configuration with custom CDN
-static func setup(organizationId: String,
-                  projectId: String,
-                  publicKey: String,
-                  configurationURL: URL,
-                  mode: TrustPinMode = .strict,
-                  autoRegisterURLProtocol: Bool = false) async throws
+// ── Verification ──────────────────────────────────────────────────────────
 
-// Manual verification  
-static func verify(domain: String, certificate: String) async throws
+func verify(domain: String, certificate: String) async throws          // instance
+static func verify(domain: String, certificate: String) async throws   // → TrustPin.default
 
-// System-wide URLProtocol control
+// ── Certificate fetch utility (v3 new) ───────────────────────────────────
+
+// Opens an ephemeral TLS connection, returns the leaf certificate as PEM.
+// Does NOT perform pin verification — use verify() after.
+func fetchCertificate(host: String, port: Int = 443) async throws -> String
+static func fetchCertificate(host: String, port: Int = 443) async throws -> String
+
+// ── URLSessionDelegate (instance-bound) ──────────────────────────────────
+
+func makeURLSessionDelegate() -> TrustPinURLSessionDelegate
+
+// ── System-wide URLProtocol control (default instance only) ──────────────
+
 static func registerURLProtocol()    // Enable system-wide pinning
 static func unregisterURLProtocol()  // Disable system-wide pinning
 
-// Logging configuration
-static func set(logLevel: TrustPinLogLevel) async
+// ── Logging ───────────────────────────────────────────────────────────────
+
+func set(logLevel: TrustPinLogLevel)          // instance
+static func set(logLevel: TrustPinLogLevel)   // → TrustPin.default
 ```
 
 #### URLProtocol Helper Methods (iOS 13.0+)

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Extensions  Reference</title>
+    <title>Structures  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
     <meta charset="utf-8">
@@ -14,9 +14,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/swift/Section/Extensions" class="dashAnchor"></a>
+    <a name="//apple_ref/swift/Section/Structures" class="dashAnchor"></a>
 
-    <a title="Extensions  Reference"></a>
+    <a title="Structures  Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -50,7 +50,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="index.html">TrustPinKit</a>
       <img class="carat" src="img/carat.png" alt=""/>
-      Extensions  Reference
+      Structures  Reference
     </p>
 
     <div class="content-wrapper">
@@ -106,8 +106,8 @@
 
         <section class="section">
           <div class="section-content top-matter">
-            <h1>Extensions</h1>
-            <p>The following extensions are available globally.</p>
+            <h1>Structures</h1>
+            <p>The following structures are available globally.</p>
 
           </div>
         </section>
@@ -115,22 +115,13 @@
         <section class="section">
           <div class="section-content">
             <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Convenience%20Methods"></a>
-                <a name="//apple_ref/swift/Section/Convenience Methods" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Convenience%20Methods"></a>
-                  <h3 class="section-name"><span>Convenience Methods</span>
-</h3>
-                </div>
-              </div>
               <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)NSURLSession"></a>
-                    <a name="//apple_ref/swift/Extension/URLSession" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)NSURLSession">URLSession</a>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV"></a>
+                    <a name="//apple_ref/swift/Struct/TrustPinConfiguration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV">TrustPinConfiguration</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -138,14 +129,50 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
-                        <a href="Extensions/URLSession.html" class="slightly-smaller">See more</a>
+                        <p>Encapsulates all configuration options for a TrustPin instance.</p>
+
+<p>Pass a <code>TrustPinConfiguration</code> to <code><a href="Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setupyyAA0aB13ConfigurationVYaKF">setup(_:)</a></code> (or the static
+<code><a href="Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setup_23autoRegisterURLProtocolyAA0aB13ConfigurationV_SbtYaKFZ">setup(_:autoRegisterURLProtocol:)</a></code> for the default instance) instead
+of individual parameters. This keeps call sites stable as new options are added —
+new properties always carry default values so existing code never needs to change.</p>
+<h2 id='required-credentials' class='heading'>Required credentials</h2>
+
+<p>The three credentials (<code>organizationId</code>, <code>projectId</code>, <code>publicKey</code>) are set once in
+the initializer and are immutable. They identify the pinning payload on the TrustPin
+CDN and authenticate its signature.</p>
+<h2 id='optional-behaviour' class='heading'>Optional behaviour</h2>
+
+<p>All other settings are <code>var</code> with sensible defaults and can be changed before
+passing the configuration to <code>setup</code>:</p>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"your-base64-public-key"</span>
+<span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">permissive</span>
+<span class="n">config</span><span class="o">.</span><span class="n">logLevel</span> <span class="o">=</span> <span class="o">.</span><span class="n">debug</span>
+
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</code></pre>
+<h2 id='custom-configuration-url' class='heading'>Custom configuration URL</h2>
+
+<p>For self-hosted or BYOK deployments, supply a <code>configurationURL</code> pointing to a
+signed JWS payload. CDN-managed projects should leave this <code>nil</code>.</p>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"org"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"proj"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">key</span>
+<span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">configurationURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://your-server.com/pins.jws"</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Structs/TrustPinConfiguration.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">URLSession</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TrustPinConfiguration</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TrustPinConfiguration Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/TrustPinConfiguration" class="dashAnchor"></a>
+
+    <a title="TrustPinConfiguration Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          TrustPinKit 3.0.0 Docs
+        </a>
+         (96% documented)
+      </p>
+    
+      <div class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </div>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/trustpin-cloud/TrustPin-Swift.binary">
+            <img class="header-icon" src="../img/gh.png" alt="GitHub"/>
+            View on GitHub
+          </a>
+        </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="dash-feed://https%3A%2F%2Fgithub.com%2Ftrustpin-cloud%2FTrustPin-Swift.binary%2Fdocsets%2FTrustPinKit.xml">
+            <img class="header-icon" src="../img/dash.png" alt="Dash"/>
+            Install in Dash
+          </a>
+        </p>
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">TrustPinKit</a>
+      <img class="carat" src="../img/carat.png" alt=""/>
+      <a class="breadcrumb" href="../Structs.html">Structures</a>
+      <img class="carat" src="../img/carat.png" alt=""/>
+      TrustPinConfiguration Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TrustPin.html">TrustPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TrustPinKitResources.html">TrustPinKitResources</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TrustPinErrors.html">TrustPinErrors</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TrustPinLogLevel.html">TrustPinLogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TrustPinMode.html">TrustPinMode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URLSession.html">URLSession</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/TrustPinConfiguration.html">TrustPinConfiguration</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>TrustPinConfiguration</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TrustPinConfiguration</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
+
+                </div>
+              </div>
+            <p>Encapsulates all configuration options for a TrustPin instance.</p>
+
+<p>Pass a <code>TrustPinConfiguration</code> to <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setupyyAA0aB13ConfigurationVYaKF">setup(_:)</a></code> (or the static
+<code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setup_23autoRegisterURLProtocolyAA0aB13ConfigurationV_SbtYaKFZ">setup(_:autoRegisterURLProtocol:)</a></code> for the default instance) instead
+of individual parameters. This keeps call sites stable as new options are added —
+new properties always carry default values so existing code never needs to change.</p>
+<h2 id='required-credentials' class='heading'>Required credentials</h2>
+
+<p>The three credentials (<code>organizationId</code>, <code>projectId</code>, <code>publicKey</code>) are set once in
+the initializer and are immutable. They identify the pinning payload on the TrustPin
+CDN and authenticate its signature.</p>
+<h2 id='optional-behaviour' class='heading'>Optional behaviour</h2>
+
+<p>All other settings are <code>var</code> with sensible defaults and can be changed before
+passing the configuration to <code>setup</code>:</p>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"your-org-id"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"your-project-id"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"your-base64-public-key"</span>
+<span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">permissive</span>
+<span class="n">config</span><span class="o">.</span><span class="n">logLevel</span> <span class="o">=</span> <span class="o">.</span><span class="n">debug</span>
+
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</code></pre>
+<h2 id='custom-configuration-url' class='heading'>Custom configuration URL</h2>
+
+<p>For self-hosted or BYOK deployments, supply a <code>configurationURL</code> pointing to a
+signed JWS payload. CDN-managed projects should leave this <code>nil</code>.</p>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"org"</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="s">"proj"</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">key</span>
+<span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">configurationURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://your-server.com/pins.jws"</span><span class="p">)</span>
+</code></pre>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Required%20%28immutable%29"></a>
+                <a name="//apple_ref/swift/Section/Required (immutable)" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Required%20%28immutable%29"></a>
+                  <h3 class="section-name"><span>Required (immutable)</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV14organizationIdSSvp"></a>
+                    <a name="//apple_ref/swift/Property/organizationId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV14organizationIdSSvp">organizationId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Your organization identifier from the TrustPin dashboard.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV9projectIdSSvp"></a>
+                    <a name="//apple_ref/swift/Property/projectId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV9projectIdSSvp">projectId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Your project identifier from the TrustPin dashboard.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV9publicKeySSvp"></a>
+                    <a name="//apple_ref/swift/Property/publicKey" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV9publicKeySSvp">publicKey</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Base64-encoded public key used to verify the signature of the pinning payload.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Optional%20behaviour%20%28mutable%2C%20with%20defaults%29"></a>
+                <a name="//apple_ref/swift/Section/Optional behaviour (mutable, with defaults)" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Optional%20behaviour%20%28mutable%2C%20with%20defaults%29"></a>
+                  <h3 class="section-name"><span>Optional behaviour (mutable, with defaults)</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV4modeAA0aB4ModeOvp"></a>
+                    <a name="//apple_ref/swift/Property/mode" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV4modeAA0aB4ModeOvp">mode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Controls how TrustPin behaves for domains not present in the pinning payload.</p>
+
+<ul>
+<li><code><a href="../Enums/TrustPinMode.html#/s:11TrustPinKit0aB4ModeO6strictyA2CmF">strict</a></code>: throws <code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO19domainNotRegisteredyA2CmF">domainNotRegistered</a></code> (default, recommended for production)</li>
+<li><code><a href="../Enums/TrustPinMode.html#/s:11TrustPinKit0aB4ModeO10permissiveyA2CmF">permissive</a></code>: allows the connection and logs an informational message</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV8logLevelAA0ab3LogF0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/logLevel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV8logLevelAA0ab3LogF0Ovp">logLevel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The verbosity of TrustPin&rsquo;s internal log output for this instance.</p>
+
+<p>Defaults to <code><a href="../Enums/TrustPinLogLevel.html#/s:11TrustPinKit0aB8LogLevelO4infoyA2CmF">info</a></code>. Set to <code><a href="../Enums/TrustPinLogLevel.html#/s:11TrustPinKit0aB8LogLevelO5debugyA2CmF">debug</a></code> during
+development, <code><a href="../Enums/TrustPinLogLevel.html#/s:11TrustPinKit0aB8LogLevelO5erroryA2CmF">error</a></code> or <code><a href="../Enums/TrustPinLogLevel.html#/s:11TrustPinKit0aB8LogLevelO4noneyA2CmF">none</a></code> in production.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">logLevel</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinLogLevel.html">TrustPinLogLevel</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV16configurationURL10Foundation0F0VSgvp"></a>
+                    <a name="//apple_ref/swift/Property/configurationURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV16configurationURL10Foundation0F0VSgvp">configurationURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Custom URL for the signed pinning payload.</p>
+
+<p>Leave <code>nil</code> to use the default TrustPin CDN endpoint. Only set this for
+self-hosted or BYOK deployments.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Initializer"></a>
+                <a name="//apple_ref/swift/Section/Initializer" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Initializer"></a>
+                  <h3 class="section-name"><span>Initializer</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11TrustPinKit0aB13ConfigurationV14organizationId07projectF09publicKeyACSS_S2Stcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(organizationId:projectId:publicKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11TrustPinKit0aB13ConfigurationV14organizationId07projectF09publicKeyACSS_S2Stcfc">init(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a new configuration with the required project credentials.</p>
+
+<p>All optional properties use their documented defaults and can be changed
+before passing this value to <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setupyyAA0aB13ConfigurationVYaKF">setup(_:)</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>organizationId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your organization identifier from the TrustPin dashboard.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>projectId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your project identifier from the TrustPin dashboard.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>publicKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Base64-encoded public key for signature verification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-18)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+    </section>
+  </body>
+</html>

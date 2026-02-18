@@ -9,20 +9,21 @@ final actor TrustPinService {
             throw TrustPinServiceError.invalidConfiguration
         }
         
-        await setLogLevel(.debug)
+        setLogLevel(.debug)
         
-        try await TrustPin.setup(
+        var trustPinConfig = TrustPinKit.TrustPinConfiguration(
             organizationId: configuration.organizationId.trimmingCharacters(in: .whitespacesAndNewlines),
             projectId: configuration.projectId.trimmingCharacters(in: .whitespacesAndNewlines),
-            publicKey: configuration.publicKey.trimmingCharacters(in: .whitespacesAndNewlines),
-            mode: configuration.mode
+            publicKey: configuration.publicKey.trimmingCharacters(in: .whitespacesAndNewlines)
         )
+        trustPinConfig.mode = configuration.mode
+        try await TrustPin.setup(trustPinConfig)
         
         isConfigured = true
     }
     
-    func setLogLevel(_ level: TrustPinLogLevel) async {
-        await TrustPin.set(logLevel: level)
+    func setLogLevel(_ level: TrustPinLogLevel) {
+        TrustPin.set(logLevel: level)
     }
 }
 

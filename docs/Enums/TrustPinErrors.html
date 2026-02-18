@@ -21,9 +21,9 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 2.1.1 Docs
+          TrustPinKit 3.0.0 Docs
         </a>
-         (95% documented)
+         (96% documented)
       </p>
     
       <div class="header-col--secondary">
@@ -70,9 +70,6 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a>
               </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/TrustPinURLSessionDelegate.html">TrustPinURLSessionDelegate</a>
-              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -97,6 +94,14 @@
               </li>
             </ul>
           </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/TrustPinConfiguration.html">TrustPinConfiguration</a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <article class="main-content">
@@ -108,6 +113,7 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TrustPinErrors</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">TrustPinErrors</span><span class="p">:</span> <span class="kt">LocalizedError</span></code></pre>
 
                 </div>
               </div>
@@ -205,7 +211,8 @@ a specific failure scenario with distinct security implications.</p>
                       <div class="abstract">
                         <p>The project configuration is invalid or incomplete.</p>
 
-<p>This error occurs when the setup parameters provided to <code>TrustPin/setup(organizationId:projectId:publicKey:mode:)</code>
+<p>This error occurs when the setup parameters provided to
+<code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C5setup_23autoRegisterURLProtocolyAA0aB13ConfigurationV_SbtYaKFZ">setup(_:autoRegisterURLProtocol:)</a></code>
 are invalid, missing, or incorrectly formatted.</p>
 <h2 id='common-causes' class='heading'>Common Causes</h2>
 
@@ -225,19 +232,20 @@ are invalid, missing, or incorrectly formatted.</p>
 </ol>
 <h2 id='example' class='heading'>Example</h2>
 <pre class="highlight swift"><code><span class="k">do</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+    <span class="k">let</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
         <span class="nv">organizationId</span><span class="p">:</span> <span class="s">"org-123"</span><span class="p">,</span>
         <span class="nv">projectId</span><span class="p">:</span> <span class="s">"project-456"</span><span class="p">,</span>
-        <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"LS0tLS1CRUdJTi..."</span><span class="p">,</span>
-        <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span>
+        <span class="nv">publicKey</span><span class="p">:</span> <span class="s">"LS0tLS1CRUdJTi..."</span>
     <span class="p">)</span>
+    <span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="p">}</span> <span class="k">catch</span> <span class="kt">TrustPinErrors</span><span class="o">.</span><span class="n">invalidProjectConfig</span> <span class="p">{</span>
     <span class="nf">print</span><span class="p">(</span><span class="s">"Invalid credentials - check TrustPin dashboard"</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre>
 <div class="aside aside-important">
     <p class="aside-title">Important</p>
-    This error indicates a fundamental configuration issue that must be resolved before TrustPin can function.
+    This error indicates a fundamental configuration issue that must be resolved before
+TrustPin can function.
 
 </div>
 
@@ -288,22 +296,6 @@ the TrustPin CDN or when the downloaded configuration cannot be parsed.</p>
 <li><strong>Retry with backoff</strong>: Implement exponential backoff for transient failures</li>
 <li><strong>Check service status</strong>: Verify TrustPin service availability</li>
 </ol>
-<h2 id='retry-strategy' class='heading'>Retry Strategy</h2>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setupWithRetry</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="n">attempt</span> <span class="k">in</span> <span class="mi">1</span><span class="o">...</span><span class="mi">3</span> <span class="p">{</span>
-        <span class="k">do</span> <span class="p">{</span>
-            <span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="cm">/* credentials */</span><span class="p">)</span>
-            <span class="k">return</span> <span class="c1">// Success</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="kt">TrustPinErrors</span><span class="o">.</span><span class="n">errorFetchingPinningInfo</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="p">{</span>
-                <span class="k">try</span> <span class="k">await</span> <span class="kt">Task</span><span class="o">.</span><span class="nf">sleep</span><span class="p">(</span><span class="nv">nanoseconds</span><span class="p">:</span> <span class="kt">UInt64</span><span class="p">(</span><span class="n">attempt</span> <span class="o">*</span> <span class="mi">1_000_000_000</span><span class="p">))</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="kt">TrustPinErrors</span><span class="o">.</span><span class="n">errorFetchingPinningInfo</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This error may be temporary and retrying with exponential backoff is recommended.
@@ -337,7 +329,7 @@ the TrustPin CDN or when the downloaded configuration cannot be parsed.</p>
                       <div class="abstract">
                         <p>The server certificate is invalid, corrupted, or could not be parsed.</p>
 
-<p>This error occurs when the certificate provided to <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C6verify6domain11certificateySS_SStYaKFZ">verify(domain:certificate:)</a></code>
+<p>This error occurs when the certificate provided to <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C6verify6domain11certificateySS_SStYaKF">verify(domain:certificate:)</a></code>
 is malformed, corrupted, or not in the expected PEM format.</p>
 <h2 id='common-causes' class='heading'>Common Causes</h2>
 
@@ -508,12 +500,13 @@ immediate attention to restore service availability.</p>
 
 <p>If immediate service restoration is critical:</p>
 <pre class="highlight swift"><code><span class="c1">// Temporary permissive mode for emergency access</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span>
+<span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
     <span class="nv">organizationId</span><span class="p">:</span> <span class="n">orgId</span><span class="p">,</span>
     <span class="nv">projectId</span><span class="p">:</span> <span class="n">projectId</span><span class="p">,</span>
-    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span><span class="p">,</span>
-    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">permissive</span>  <span class="c1">// Temporary bypass</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span>
 <span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">permissive</span>  <span class="c1">// Temporary bypass</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </code></pre>
 <h2 id='prevention' class='heading'>Prevention</h2>
 
@@ -700,13 +693,16 @@ explicitly validated.</p>
 <p>When implementing strict mode:</p>
 <pre class="highlight swift"><code><span class="c1">// Phase 1: Discovery with permissive mode</span>
 <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">info</span><span class="p">)</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">permissive</span><span class="p">)</span>
+<span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="n">orgId</span><span class="p">,</span> <span class="nv">projectId</span><span class="p">:</span> <span class="n">projectId</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">permissive</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
 <span class="c1">// Phase 2: Register discovered domains</span>
 <span class="c1">// (Use logs to identify all accessed domains)</span>
 
 <span class="c1">// Phase 3: Enable strict mode</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">strict</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </code></pre>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
@@ -732,13 +728,52 @@ explicitly validated.</p>
                 </li>
               </ul>
             </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/LocalizedError"></a>
+                <a name="//apple_ref/swift/Section/LocalizedError" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LocalizedError"></a>
+                  <h3 class="section-name"><span>LocalizedError</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation14LocalizedErrorP16errorDescriptionSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/errorDescription" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation14LocalizedErrorP16errorDescriptionSSSgvp">errorDescription</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">errorDescription</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-09)</p>
+      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-18)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
