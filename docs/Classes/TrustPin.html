@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 3.0.0 Docs
+          TrustPinKit 3.1.0 Docs
         </a>
          (96% documented)
       </p>
@@ -249,7 +249,8 @@ Use <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C22makeURLSessio
                               </td>
                               <td>
                                 <div>
-                                  <p>A stable, unique identifier for this pinning context.</p>
+                                  <p>A stable, unique identifier for this pinning context.
+Must not be <code>&quot;default&quot;</code> — use <code><a href="../Classes/TrustPin.html#/s:11TrustPinKit0aB0C7defaultACvpZ">default</a></code> instead.</p>
                                 </div>
                               </td>
                             </tr>
@@ -643,6 +644,19 @@ connection without sending any HTTP data.</p>
                         <p>Configures the default TrustPin instance.</p>
 
 <p>Equivalent to <code>TrustPin.default.setup(configuration)</code>.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO20invalidProjectConfigyA2CmF">invalidProjectConfig</a></code> if credentials are missing or invalid.</p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO24errorFetchingPinningInfoyA2CmF">errorFetchingPinningInfo</a></code> if the pinning payload cannot be fetched.</p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/TrustPinErrors.html#/s:11TrustPinKit0aB6ErrorsO29configurationValidationFailedyA2CmF">configurationValidationFailed</a></code> if signature verification fails.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -654,46 +668,39 @@ connection without sending any HTTP data.</p>
 
                         </div>
                       </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4mode8logLevel16configurationURL23autoRegisterURLProtocolySS_S2SAA0aB4ModeOAA0ab3LogL0O10Foundation0N0VSgSbtYaKFZ"></a>
-                    <a name="//apple_ref/swift/Method/setup(organizationId:projectId:publicKey:mode:logLevel:configurationURL:autoRegisterURLProtocol:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11TrustPinKit0aB0C5setup14organizationId07projectF09publicKey4mode8logLevel16configurationURL23autoRegisterURLProtocolySS_S2SAA0aB4ModeOAA0ab3LogL0O10Foundation0N0VSgSbtYaKFZ">setup(organizationId:<wbr>projectId:<wbr>publicKey:<wbr>mode:<wbr>logLevel:<wbr>configurationURL:<wbr>autoRegisterURLProtocol:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Asynchronous
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Backward-compatible convenience overload for configuring the default TrustPin instance.</p>
-
-<p>This overload accepts individual parameters rather than a <code><a href="../Structs/TrustPinConfiguration.html">TrustPinConfiguration</a></code> struct,
-preserving source compatibility for callers that have not yet migrated to the struct API.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span>
-    <span class="nv">organizationId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">projectId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinMode.html">TrustPinMode</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span><span class="p">,</span>
-    <span class="nv">logLevel</span><span class="p">:</span> <span class="kt"><a href="../Enums/TrustPinLogLevel.html">TrustPinLogLevel</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">info</span><span class="p">,</span>
-    <span class="nv">configurationURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">autoRegisterURLProtocol</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
-<span class="p">)</span> <span class="k">async</span> <span class="k">throws</span></code></pre>
-
-                        </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A <code><a href="../Structs/TrustPinConfiguration.html">TrustPinConfiguration</a></code> value with your project
+credentials and optional settings (mode, custom URL).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoRegisterURLProtocol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>When <code>true</code>, automatically registers
+<code><a href="../Classes/TrustPinURLProtocol.html">TrustPinURLProtocol</a></code> for system-wide pinning after setup. Requires iOS 13+ / macOS 13+.
+Defaults to <code>false</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -874,7 +881,7 @@ preserving source compatibility for callers that have not yet migrated to the st
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-18)</p>
+      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-19)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
