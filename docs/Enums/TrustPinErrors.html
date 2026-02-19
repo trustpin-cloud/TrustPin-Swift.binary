@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          TrustPinKit 3.0.0 Docs
+          TrustPinKit 3.1.0 Docs
         </a>
          (96% documented)
       </p>
@@ -274,31 +274,40 @@ TrustPin can function.
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Failed to fetch or parse pinning information from the remote source.</p>
+                        <p>Failed to fetch or parse the pinning configuration after exhausting all sources.</p>
 
-<p>This error occurs when TrustPin cannot download the pinning configuration from
-the TrustPin CDN or when the downloaded configuration cannot be parsed.</p>
+<p>TrustPin attempts to download the JWS configuration from a prioritised chain of sources:</p>
+
+<ol>
+<li>Custom <code>configurationURL</code> (if set)</li>
+<li>Primary CDN (<code>cdn.trustpin.cloud</code>)</li>
+<li>Mobile CDN (<code>cdn.trustpin.mobile</code>)</li>
+<li>Backup CDN (<code>backup-cdn.trustpin.cloud</code>)</li>
+</ol>
+
+<p>The full chain is attempted twice. If all attempts fail and no valid stale cache
+is available, this error is thrown.</p>
 <h2 id='common-causes' class='heading'>Common Causes</h2>
 
 <ul>
-<li>Network connectivity issues</li>
-<li>DNS resolution failures for <code>cdn.trustpin.cloud</code></li>
-<li>Firewall or proxy blocking HTTPS requests</li>
-<li>Service downtime or maintenance</li>
-<li>Invalid response format from the server</li>
+<li>Network connectivity issues affecting all CDN endpoints</li>
+<li>DNS resolution failures</li>
+<li>Firewall or proxy blocking HTTPS requests to TrustPin CDNs</li>
+<li>Simultaneous service downtime across all CDNs</li>
+<li>Invalid response format from all servers</li>
 </ul>
 <h2 id='resolution-steps' class='heading'>Resolution Steps</h2>
 
 <ol>
 <li><strong>Check connectivity</strong>: Verify internet connection and DNS resolution</li>
-<li><strong>Test endpoint</strong>: Try accessing <code>https://cdn.trustpin.cloud</code> directly</li>
-<li><strong>Review firewall</strong>: Ensure HTTPS traffic to TrustPin CDN is allowed</li>
-<li><strong>Retry with backoff</strong>: Implement exponential backoff for transient failures</li>
+<li><strong>Review firewall</strong>: Ensure HTTPS traffic to all TrustPin CDN hostnames is allowed</li>
 <li><strong>Check service status</strong>: Verify TrustPin service availability</li>
+<li><strong>Inspect logs</strong>: Enable <code>.debug</code> log level to see which CDN failed and why</li>
 </ol>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    This error may be temporary and retrying with exponential backoff is recommended.
+    The SDK retries the full CDN chain twice and falls back to a 24-hour stale
+cache before throwing this error. Persistent failures indicate a systemic network issue.
 
 </div>
 
@@ -500,13 +509,12 @@ immediate attention to restore service availability.</p>
 
 <p>If immediate service restoration is critical:</p>
 <pre class="highlight swift"><code><span class="c1">// Temporary permissive mode for emergency access</span>
-<span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="kt">TrustPinConfiguration</span><span class="p">(</span>
     <span class="nv">organizationId</span><span class="p">:</span> <span class="n">orgId</span><span class="p">,</span>
     <span class="nv">projectId</span><span class="p">:</span> <span class="n">projectId</span><span class="p">,</span>
-    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span>
-<span class="p">)</span>
-<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">permissive</span>  <span class="c1">// Temporary bypass</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">permissive</span>  <span class="c1">// Temporary bypass</span>
+<span class="p">))</span>
 </code></pre>
 <h2 id='prevention' class='heading'>Prevention</h2>
 
@@ -692,17 +700,24 @@ explicitly validated.</p>
 
 <p>When implementing strict mode:</p>
 <pre class="highlight swift"><code><span class="c1">// Phase 1: Discovery with permissive mode</span>
-<span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">info</span><span class="p">)</span>
-<span class="k">var</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">TrustPinConfiguration</span><span class="p">(</span><span class="nv">organizationId</span><span class="p">:</span> <span class="n">orgId</span><span class="p">,</span> <span class="nv">projectId</span><span class="p">:</span> <span class="n">projectId</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span><span class="p">)</span>
-<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">permissive</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="kt">TrustPin</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">info</span><span class="p">)</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="n">orgId</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="n">projectId</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span><span class="p">,</span>
+    <span class="nv">mode</span><span class="p">:</span> <span class="o">.</span><span class="n">permissive</span>
+<span class="p">))</span>
 
 <span class="c1">// Phase 2: Register discovered domains</span>
 <span class="c1">// (Use logs to identify all accessed domains)</span>
 
 <span class="c1">// Phase 3: Enable strict mode</span>
-<span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="o">.</span><span class="n">strict</span>
-<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="k">try</span> <span class="k">await</span> <span class="kt">TrustPin</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="kt">TrustPinConfiguration</span><span class="p">(</span>
+    <span class="nv">organizationId</span><span class="p">:</span> <span class="n">orgId</span><span class="p">,</span>
+    <span class="nv">projectId</span><span class="p">:</span> <span class="n">projectId</span><span class="p">,</span>
+    <span class="nv">publicKey</span><span class="p">:</span> <span class="n">publicKey</span>
+    <span class="c1">// mode defaults to .strict</span>
+<span class="p">))</span>
 </code></pre>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
@@ -773,7 +788,7 @@ explicitly validated.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-18)</p>
+      <p>&copy; 2026 <a class="link" href="https://trustpin.cloud" target="_blank" rel="external noopener">TrustPin</a>. All rights reserved. (Last updated: 2026-02-19)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>

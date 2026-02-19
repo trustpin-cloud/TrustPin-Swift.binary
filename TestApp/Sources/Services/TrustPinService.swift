@@ -11,12 +11,12 @@ final actor TrustPinService {
         
         setLogLevel(.debug)
         
-        var trustPinConfig = TrustPinKit.TrustPinConfiguration(
+        let trustPinConfig = TrustPinKit.TrustPinConfiguration(
             organizationId: configuration.organizationId.trimmingCharacters(in: .whitespacesAndNewlines),
             projectId: configuration.projectId.trimmingCharacters(in: .whitespacesAndNewlines),
-            publicKey: configuration.publicKey.trimmingCharacters(in: .whitespacesAndNewlines)
+            publicKey: configuration.publicKey.trimmingCharacters(in: .whitespacesAndNewlines),
+            mode: configuration.mode
         )
-        trustPinConfig.mode = configuration.mode
         try await TrustPin.setup(trustPinConfig)
         
         isConfigured = true
