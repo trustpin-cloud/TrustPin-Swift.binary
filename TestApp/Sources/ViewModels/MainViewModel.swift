@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CryptoKit
 import TrustPinKit
 
 @MainActor
@@ -129,10 +130,59 @@ final class MainViewModel: ObservableObject {
         }
     }
     
+    func fetchCertificate() {
+        guard !testURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            loggingService.log("Fetch certificate failed: No URL provided", level: .warning)
+            return
+        }
+
+        Task { @MainActor in
+            isTesting = true
+            statusMessage = "Fetching certificate..."
+
+            // Extract hostname from URL
+            guard let url = URL(string: testURL.trimmingCharacters(in: .whitespacesAndNewlines)),
+                  let host = url.host else {
+                loggingService.log("Fetch certificate failed: Invalid URL format", level: .error)
+                isTesting = false
+                statusMessage = isConfigured ? "TrustPin configured" : "TrustPin not configured"
+                return
+            }
+
+            let port = url.port ?? 443
+
+            loggingService.log("Fetching certificate from: \(host):\(port)", level: .info)
+
+            do {
+                let pem = try await TrustPin.fetchCertificate(host: host, port: port)
+
+                isTesting = false
+                statusMessage = isConfigured ? "TrustPin configured" : "TrustPin not configured"
+
+                loggingService.log("Certificate fetched successfully!", level: .success)
+
+                // Calculate SHA256 hash of the PEM certificate
+                if let pemData = pem.data(using: .utf8) {
+                    let hash = SHA256.hash(data: pemData)
+                    let hashString = hash.map { String(format: "%02x", $0) }.joined()
+                    loggingService.log("Certificate SHA256: \(hashString)", level: .info)
+                }
+
+                loggingService.log("Certificate PEM:", level: .info)
+                loggingService.log(pem, level: .debug)
+            } catch {
+                isTesting = false
+                statusMessage = isConfigured ? "TrustPin configured" : "TrustPin not configured"
+
+                loggingService.log("Failed to fetch certificate: \(error.localizedDescription)", level: .error)
+            }
+        }
+    }
+
     func clearLog() {
         loggingService.clear()
     }
-    
+
     func toggleModeAlert() {
         showModeAlert = true
     }

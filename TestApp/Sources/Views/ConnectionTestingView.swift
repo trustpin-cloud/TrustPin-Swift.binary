@@ -6,8 +6,9 @@ struct ConnectionTestingView: View {
     let isTesting: Bool
     let statusMessage: String
     let onTest: () -> Void
+    let onFetchCertificate: () -> Void
     let onClearLog: () -> Void
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -16,38 +17,46 @@ struct ConnectionTestingView: View {
                     .fontWeight(.semibold)
                 Spacer()
             }
-            
+
             VStack(alignment: .leading, spacing: 12) {
                 Text("Test URL (GET)")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 TextField("https://api.example.com", text: $testURL)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocorrectionDisabled()
             }
-            
-            HStack(spacing: 12) {
-                Button(action: onTest) {
-                    Text("Test Connection")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(isConfigured ? Color.accentColor : Color.gray)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .disabled(!isConfigured || isTesting)
-                
-                Button(action: onClearLog) {
-                    Text("Clear Log")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.white)
-                        .foregroundColor(Color.accentColor)
-                        .cornerRadius(8)
-                }
+
+            Button(action: onTest) {
+                Text("Test Connection")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(isConfigured ? Color.accentColor : Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
             }
-            
+            .disabled(!isConfigured || isTesting)
+
+            Button(action: onFetchCertificate) {
+                Text("Fetch Certificate")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
+            .disabled(isTesting)
+
+            Button(action: onClearLog) {
+                Text("Clear Log")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.white)
+                    .foregroundColor(Color.accentColor)
+                    .cornerRadius(8)
+            }
+
             StatusBadge(message: statusMessage, isConfigured: isConfigured)
         }
         .padding()

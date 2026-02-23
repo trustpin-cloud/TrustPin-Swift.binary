@@ -23,6 +23,7 @@ struct ContentView: View {
                         isTesting: viewModel.isTesting,
                         statusMessage: viewModel.statusMessage,
                         onTest: viewModel.testConnection,
+                        onFetchCertificate: viewModel.fetchCertificate,
                         onClearLog: viewModel.clearLog
                     )
                     
